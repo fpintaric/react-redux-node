@@ -1,19 +1,46 @@
 import React, { Component } from "react";
-import "./App.css";
-import { bindActionCreators } from "../../../../Users/Franjo/AppData/Local/Microsoft/TypeScript/3.0/node_modules/redux";
+import { bindActionCreators } from "redux";
+import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
+import Navbar from "./Navbar";
+import Sidebar from "./Sidebar";
+import ContentContainer from "./ContentContainer";
 import { exampleAction } from "../actions/example_action";
+
+const styles = () => ({
+  root: {
+    flexGrow: 1,
+    height: "100vh",
+    zIndex: 1,
+    overflow: "hidden",
+    position: "relative",
+    display: "flex"
+  }
+});
 
 class App extends Component {
   constructor(props) {
     super(props);
-    console.log(props.examplePropOne[0].title);
     this.state = {};
   }
 
   render() {
-    return <div className="App">Epic app (trust me)</div>;
+    const { classes } = this.props;
+
+    return (
+      <CssBaseline>
+        <Router>
+          <div className={classes.root}>
+            <Navbar />
+            <Sidebar />
+            <Route path="/content" component={ContentContainer} />
+          </div>
+        </Router>
+      </CssBaseline>
+    );
   }
 }
 
@@ -30,4 +57,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(App);
+)(withStyles(styles)(App));
