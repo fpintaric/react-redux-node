@@ -3,7 +3,7 @@ import { bindActionCreators } from "redux";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
@@ -21,6 +21,24 @@ const styles = () => ({
   }
 });
 
+const PrivateRoute = ({ component: Component, authenticated, ...rest }) => (
+  <Route
+    {...rest}
+    render={props =>
+      authenticated ? (
+        <Component {...props} />
+      ) : (
+        <Redirect
+          to={{
+            pathname: "/login",
+            state: { from: props.location }
+          }}
+        />
+      )
+    }
+  />
+);
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -36,7 +54,11 @@ class App extends Component {
           <div className={classes.root}>
             <Navbar />
             <Sidebar />
-            <Route path="/content" component={ContentContainer} />
+            <PrivateRoute
+              path="/content"
+              authenticated={this.props.authenticated}
+              component={ContentContainer}
+            />
           </div>
         </Router>
       </CssBaseline>
@@ -46,7 +68,7 @@ class App extends Component {
 
 const mapStateToProps = state => {
   return {
-    examplePropOne: state.example
+    authenticated: state.auth.authenticated
   };
 };
 
