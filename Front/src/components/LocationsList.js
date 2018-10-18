@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { bindActionCreators } from "redux";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
@@ -18,17 +19,11 @@ const styles = {
 };
 
 class LocationsList extends Component {
-  constructor(props) {
-    super(props);
-    console.log(props);
-  }
-
   componentDidMount = () => {
     this.props.getLocations();
   };
 
   render() {
-    console.log("rendering with props...", this.props);
     const { classes, locations } = this.props;
 
     return locations ? (
@@ -57,6 +52,11 @@ class LocationsList extends Component {
     );
   }
 }
+
+LocationsList.propTypes = {
+  classes: PropTypes.object.isRequired,
+  locations: PropTypes.array
+};
 
 const mapStateToProps = state => {
   return {

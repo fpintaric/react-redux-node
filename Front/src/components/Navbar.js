@@ -19,7 +19,7 @@ class MenuAppBar extends React.Component {
       <AppBar position="absolute" className={classes.appBar}>
         <Toolbar>
           <Typography variant="h6" color="inherit" noWrap>
-            Clipped drawer
+            React/Redux/Node
           </Typography>
         </Toolbar>
       </AppBar>

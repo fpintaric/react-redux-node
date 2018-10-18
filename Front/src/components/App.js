@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { bindActionCreators } from "redux";
+import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -10,7 +10,6 @@ import Sidebar from "./Sidebar";
 import ContentContainer from "./ContentContainer";
 import LocationsList from "./LocationsList";
 import PrivateRoute from "./PrivateRoute";
-import { exampleAction } from "../actions/example_action";
 
 const styles = () => ({
   root: {
@@ -24,11 +23,6 @@ const styles = () => ({
 });
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   render() {
     const { classes } = this.props;
 
@@ -51,17 +45,15 @@ class App extends Component {
   }
 }
 
+App.propTypes = {
+  classes: PropTypes.object.isRequired,
+  authenticated: PropTypes.bool.isRequired
+};
+
 const mapStateToProps = state => {
   return {
     authenticated: state.auth.authenticated
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ exampleAction }, dispatch);
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withStyles(styles)(App));
+export default connect(mapStateToProps)(withStyles(styles)(App));

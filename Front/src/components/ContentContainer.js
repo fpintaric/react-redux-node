@@ -24,7 +24,8 @@ function ContentContainer(props) {
 }
 
 ContentContainer.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  children: PropTypes.element.isRequired
 };
 
 export default withStyles(styles)(ContentContainer);
