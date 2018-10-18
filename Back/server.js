@@ -41,6 +41,8 @@ app.get("/", (req, res) => {
   res.json({ message: "You hit the root route!" });
 });
 
+require("./app/routes/location.routes.js")(app);
+
 app.listen(PORT, () => {
   console.log("Server listening on port: ", PORT);
 });

@@ -3,12 +3,13 @@ import { bindActionCreators } from "redux";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
-import axios from "axios";
+import { BrowserRouter as Router } from "react-router-dom";
 
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import ContentContainer from "./ContentContainer";
+import LocationsList from "./LocationsList";
+import PrivateRoute from "./PrivateRoute";
 import { exampleAction } from "../actions/example_action";
 
 const styles = () => ({
@@ -22,34 +23,10 @@ const styles = () => ({
   }
 });
 
-const PrivateRoute = ({ component: Component, authenticated, ...rest }) => (
-  <Route
-    {...rest}
-    render={props =>
-      authenticated ? (
-        <Component {...props} />
-      ) : (
-        <Redirect
-          to={{
-            pathname: "/login",
-            state: { from: props.location }
-          }}
-        />
-      )
-    }
-  />
-);
-
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {};
-  }
-
-  componentWillMount() {
-    axios.get("http://localhost:8080/").then(res => {
-      console.log(res);
-    });
   }
 
   render() {
@@ -62,9 +39,10 @@ class App extends Component {
             <Navbar />
             <Sidebar />
             <PrivateRoute
-              path="/content"
+              path="/locations"
               authenticated={this.props.authenticated}
               component={ContentContainer}
+              childComponent={LocationsList}
             />
           </div>
         </Router>

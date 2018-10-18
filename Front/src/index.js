@@ -5,6 +5,8 @@ import "./index.css";
 
 import { Provider } from "react-redux";
 import { store } from "./store/index";
+import { createStore, applyMiddleware } from "redux";
+import reduxThunk from "redux-thunk";
 
 import App from "./components/App";
 import * as serviceWorker from "./serviceWorker";
@@ -15,8 +17,10 @@ const theme = createMuiTheme({
   }
 });
 
+const createStoreWithMiddleware = applyMiddleware(reduxThunk)(createStore);
+
 ReactDOM.render(
-  <Provider store={store}>
+  <Provider store={createStoreWithMiddleware(store)}>
     <MuiThemeProvider theme={theme}>
       <App />
     </MuiThemeProvider>
