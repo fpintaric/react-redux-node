@@ -20,7 +20,13 @@ const theme = createMuiTheme({
 const createStoreWithMiddleware = applyMiddleware(reduxThunk)(createStore);
 
 ReactDOM.render(
-  <Provider store={createStoreWithMiddleware(store)}>
+  <Provider
+    store={createStoreWithMiddleware(
+      store,
+      window.__REDUX_DEVTOOLS_EXTENSION__ &&
+        window.__REDUX_DEVTOOLS_EXTENSION__()
+    )}
+  >
     <MuiThemeProvider theme={theme}>
       <App />
     </MuiThemeProvider>

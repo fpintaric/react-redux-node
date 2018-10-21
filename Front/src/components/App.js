@@ -10,6 +10,7 @@ import Sidebar from "./Sidebar";
 import ContentContainer from "./ContentContainer";
 import LocationsList from "./LocationsList";
 import PrivateRoute from "./PrivateRoute";
+import SimpleModal from "./PopupDialog";
 
 const styles = () => ({
   root: {
@@ -38,6 +39,7 @@ class App extends Component {
               component={ContentContainer}
               childComponent={LocationsList}
             />
+            <SimpleModal />
           </div>
         </Router>
       </CssBaseline>
