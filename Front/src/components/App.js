@@ -3,14 +3,13 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, withRouter } from "react-router-dom";
 
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import ContentContainer from "./ContentContainer";
 import LocationsList from "./LocationsList";
 import PrivateRoute from "./PrivateRoute";
-import SimpleModal from "./PopupDialog";
 
 const styles = () => ({
   root: {
@@ -23,6 +22,8 @@ const styles = () => ({
   }
 });
 
+const NavbarWithRouter = withRouter(Navbar);
+
 class App extends Component {
   render() {
     const { classes } = this.props;
@@ -31,7 +32,7 @@ class App extends Component {
       <CssBaseline>
         <Router>
           <div className={classes.root}>
-            <Navbar />
+            <NavbarWithRouter />
             <Sidebar />
             <PrivateRoute
               path="/locations"
@@ -39,7 +40,6 @@ class App extends Component {
               component={ContentContainer}
               childComponent={LocationsList}
             />
-            <SimpleModal />
           </div>
         </Router>
       </CssBaseline>

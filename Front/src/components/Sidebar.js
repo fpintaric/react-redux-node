@@ -8,8 +8,9 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Divider from "@material-ui/core/Divider";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
+import PermMediaIcon from "@material-ui/icons/PermMedia";
 
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -25,6 +26,9 @@ const styles = theme => ({
   typography: {
     useNextVariants: true,
     suppressDeprecationWarnings: true
+  },
+  noDecoration: {
+    textDecoration: "none"
   }
 });
 
@@ -40,14 +44,22 @@ function Sidebar(props) {
     >
       <div className={classes.toolbar} />
       <List>
-        <Link to="/locations">
+        <NavLink to="/locations" className={classes.noDecoration}>
           <ListItem button>
             <ListItemIcon>
               <LocationOnIcon />
             </ListItemIcon>
             <ListItemText primary="Locations" />
           </ListItem>
-        </Link>
+        </NavLink>
+        <NavLink to="/media" className={classes.noDecoration}>
+          <ListItem button>
+            <ListItemIcon>
+              <PermMediaIcon />
+            </ListItemIcon>
+            <ListItemText primary="Media" />
+          </ListItem>
+        </NavLink>
       </List>
       <Divider />
     </Drawer>
