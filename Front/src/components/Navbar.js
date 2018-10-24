@@ -7,10 +7,9 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import { Field } from "redux-form";
 
 import SimpleModal from "./PopupDialog";
-import Form from "./ReduxForm";
+import LocationForm from "./LocationForm";
 import { toggleModal } from "../actions/toggleModal";
 
 const styles = theme => ({
@@ -47,10 +46,7 @@ class MenuAppBar extends React.Component {
           </Button>
         </Toolbar>
         <SimpleModal apiLink={currentPath}>
-          <Form>
-            <Field name="city" component="input" type="text" />
-            <Field name="address" component="input" type="text" />
-          </Form>
+          <LocationForm />
         </SimpleModal>
       </AppBar>
     );
