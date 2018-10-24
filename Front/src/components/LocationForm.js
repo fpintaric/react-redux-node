@@ -1,11 +1,15 @@
 import React, { Component } from "react";
 import axios from "axios";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import { reduxForm } from "redux-form";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { Field } from "redux-form";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import { hideModal } from "../actions/toggleModal";
+import { insertLocation } from "../actions/insertLocation";
 
 const styles = theme => ({
   container: {
@@ -43,7 +47,12 @@ class LocationForm extends Component {
   onSubmit(values) {
     axios
       .post("http://localhost:8080/locations", values)
-      .then(response => console.log(response));
+      .then(response => {
+        console.log(response);
+        this.props.insertLocation(response.data);
+        this.props.hideModal();
+      })
+      .catch(error => console.log(error));
   }
 
   render() {
@@ -81,7 +90,9 @@ class LocationForm extends Component {
           >
             Create Location
           </Button>
-          <Button className={classes.button}>Cancel</Button>
+          <Button onClick={this.props.hideModal} className={classes.button}>
+            Cancel
+          </Button>
         </div>
       </form>
     );
@@ -96,4 +107,11 @@ LocationForm.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(LocationForm);
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({ hideModal, insertLocation }, dispatch);
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(withStyles(styles)(LocationForm));

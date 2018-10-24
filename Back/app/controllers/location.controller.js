@@ -1,7 +1,6 @@
 const Location = require("../models/location.model.js");
 
 exports.create = (req, res) => {
-  console.log(req.body);
   if (!req.body.city || !req.body.address) {
     return res.status(400).send({
       message: "Missing params"
@@ -16,7 +15,7 @@ exports.create = (req, res) => {
   location
     .save()
     .then(data => {
-      res.send(data);
+      res.status(201).send(data);
     })
     .catch(err => {
       res.status(500).send({
@@ -42,7 +41,7 @@ exports.findOne = (req, res) => {
     .then(location => {
       if (!location) {
         return res.status(404).send({
-          message: "Cannot found location with id: " + req.params.locationId
+          message: "Cannot find location with id: " + req.params.locationId
         });
       }
       res.send(location);
@@ -50,7 +49,7 @@ exports.findOne = (req, res) => {
     .catch(err => {
       if (err.kind === "ObjectId") {
         return res.status(404).send({
-          message: "Cannot found location with id: " + req.params.locationId
+          message: "Cannot find location with id: " + req.params.locationId
         });
       }
       return res.status(500).send({

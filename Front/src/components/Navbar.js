@@ -22,13 +22,18 @@ const styles = theme => ({
 });
 
 class MenuAppBar extends React.Component {
-  render() {
-    const currentPath = this.props.location.pathname;
-    const { classes } = this.props;
+  pickFormBasedOnLocation(path) {
+    switch (path) {
+      case "locations":
+        return <LocationForm />;
+      default:
+        return null;
+    }
+  }
 
-    this.handleSubmit = values => {
-      console.log(values);
-    };
+  render() {
+    const currentPath = this.props.location.pathname.replace("/", "");
+    const { classes } = this.props;
 
     return (
       <AppBar position="absolute" className={classes.appBar}>
@@ -42,11 +47,11 @@ class MenuAppBar extends React.Component {
             React/Redux/Node
           </Typography>
           <Button color="inherit" onClick={this.props.toggleModal}>
-            Add
+            {"Add " + currentPath}
           </Button>
         </Toolbar>
         <SimpleModal apiLink={currentPath}>
-          <LocationForm />
+          {this.pickFormBasedOnLocation(currentPath)}
         </SimpleModal>
       </AppBar>
     );
