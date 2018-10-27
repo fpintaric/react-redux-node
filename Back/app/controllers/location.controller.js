@@ -93,6 +93,7 @@ exports.update = (req, res) => {
 };
 
 exports.delete = (req, res) => {
+  console.log(req.params);
   Location.findByIdAndRemove(req.params.locationId)
     .then(location => {
       if (!location) {

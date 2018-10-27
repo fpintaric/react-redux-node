@@ -9,5 +9,5 @@ module.exports = app => {
 
   app.put("/locations/:locationId", locations.update);
 
-  app.delete("/locations/:locationid", locations.delete);
+  app.delete("/locations/:locationId", locations.delete);
 };
