@@ -3,8 +3,7 @@ import PropTypes from "prop-types";
 import { bindActionCreators } from "redux";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-
-import { forIn } from "lodash";
+import { withRouter } from "react-router-dom";
 
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -13,17 +12,24 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
+import SimpleModal from "./PopupDialog";
+import PrivateRoute from "./PrivateRoute";
+
 import { getLocations } from "../actions/getLocations";
 import { deleteLocation } from "../actions/deleteLocation";
+import LocationForm from "./LocationForm";
 
 const styles = {
   table: {
     minWidth: "auto"
+  },
+  hoverHand: {
+    cursor: "pointer"
   }
 };
 
-const LocationItem = ({ id, city, address, deleteHandler }) => (
-  <TableRow>
+const LocationItem = ({ id, city, address, deleteHandler, editHandler }) => (
+  <TableRow style={{ cursor: "pointer" }}>
     <TableCell component="th" scope="row">
       {city}
     </TableCell>
@@ -76,7 +82,13 @@ class LocationsList extends Component {
             <TableCell />
           </TableRow>
         </TableHead>
-        <TableBody>{this.renderLocations(locations)}</TableBody>
+        <TableBody>{this.renderLocations(locations, classes)}</TableBody>
+        <PrivateRoute
+          path="/locations/new"
+          authenticated={true}
+          component={SimpleModal}
+          childComponent={LocationForm}
+        />
       </Table>
     ) : (
       <div>Loading...</div>
@@ -99,7 +111,9 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators({ getLocations, deleteLocation }, dispatch);
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withStyles(styles)(LocationsList));
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(withStyles(styles)(LocationsList))
+);

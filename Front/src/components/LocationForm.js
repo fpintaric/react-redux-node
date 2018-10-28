@@ -10,6 +10,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { hideModal } from "../actions/toggleModal";
 import { insertLocation } from "../actions/insertLocation";
+import { withRouter } from "react-router-dom";
 
 const styles = theme => ({
   container: {
@@ -31,6 +32,11 @@ const styles = theme => ({
 });
 
 class LocationForm extends Component {
+  constructor(props) {
+    super(props);
+    this.hideModalUrl = this.hideModalUrl.bind(this);
+  }
+
   renderField(field) {
     return (
       <TextField
@@ -50,9 +56,12 @@ class LocationForm extends Component {
       .then(response => {
         console.log(response);
         this.props.insertLocation(response.data);
-        this.props.hideModal();
+        this.hideModalUrl();
       })
       .catch(error => console.log(error));
+  }
+  hideModalUrl() {
+    this.props.history.push("/locations");
   }
 
   render() {
@@ -90,7 +99,7 @@ class LocationForm extends Component {
           >
             Create Location
           </Button>
-          <Button onClick={this.props.hideModal} className={classes.button}>
+          <Button onClick={this.hideModalUrl} className={classes.button}>
             Cancel
           </Button>
         </div>
@@ -111,7 +120,9 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators({ hideModal, insertLocation }, dispatch);
 };
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(withStyles(styles)(LocationForm));
+export default withRouter(
+  connect(
+    null,
+    mapDispatchToProps
+  )(withStyles(styles)(LocationForm))
+);

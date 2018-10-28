@@ -8,7 +8,6 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 
-import SimpleModal from "./PopupDialog";
 import LocationForm from "./LocationForm";
 import { toggleModal } from "../actions/toggleModal";
 
@@ -22,6 +21,11 @@ const styles = theme => ({
 });
 
 class MenuAppBar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.addNewLocation = this.addNewLocation.bind(this);
+  }
+
   pickFormBasedOnLocation(path) {
     switch (path) {
       case "locations":
@@ -29,6 +33,10 @@ class MenuAppBar extends React.Component {
       default:
         return null;
     }
+  }
+
+  addNewLocation(currentPath) {
+    this.props.history.push(`${currentPath}/new`);
   }
 
   render() {
@@ -46,13 +54,13 @@ class MenuAppBar extends React.Component {
           >
             React/Redux/Node
           </Typography>
-          <Button color="inherit" onClick={this.props.toggleModal}>
+          <Button
+            color="inherit"
+            onClick={() => this.addNewLocation(currentPath)}
+          >
             {"Add " + currentPath}
           </Button>
         </Toolbar>
-        <SimpleModal apiLink={currentPath}>
-          {this.pickFormBasedOnLocation(currentPath)}
-        </SimpleModal>
       </AppBar>
     );
   }

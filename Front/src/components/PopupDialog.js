@@ -5,6 +5,7 @@ import { bindActionCreators } from "redux";
 import Modal from "@material-ui/core/Modal";
 import { connect } from "react-redux";
 import { hideModal } from "../actions/toggleModal";
+import { withRouter } from "react-router-dom";
 
 const styles = theme => ({
   paper: {
@@ -20,6 +21,15 @@ const styles = theme => ({
 });
 
 class SimpleModal extends Component {
+  constructor(props) {
+    super(props);
+    this.hideModal = this.hideModal.bind(this);
+  }
+
+  hideModal() {
+    this.props.history.push("/locations");
+  }
+
   render() {
     const { classes } = this.props;
 
@@ -27,8 +37,8 @@ class SimpleModal extends Component {
       <Modal
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
-        open={this.props.isModalOpen}
-        onClose={this.props.hideModal}
+        open
+        onClose={this.hideModal}
       >
         <div className={classes.paper}>{this.props.children}</div>
       </Modal>
@@ -51,7 +61,9 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators({ hideModal }, dispatch);
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withStyles(styles)(SimpleModal));
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(withStyles(styles)(SimpleModal))
+);
