@@ -5,8 +5,8 @@ const bodyParser = require("body-parser");
 
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
+app.use(bodyParser.json({ limit: "50mb" }));
 
 const dbConfig = require("./config/database.config.js");
 const mongoose = require("mongoose");
@@ -43,6 +43,7 @@ app.get("/", (req, res) => {
 });
 
 require("./app/routes/location.routes.js")(app);
+require("./app/routes/media.routes.js")(app);
 
 app.listen(PORT, () => {
   console.log("Server listening on port: ", PORT);

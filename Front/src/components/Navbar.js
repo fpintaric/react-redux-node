@@ -7,8 +7,6 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-
-import LocationForm from "./LocationForm";
 import { toggleModal } from "../actions/toggleModal";
 
 const styles = theme => ({
@@ -24,15 +22,6 @@ class MenuAppBar extends React.Component {
   constructor(props) {
     super(props);
     this.addNewLocation = this.addNewLocation.bind(this);
-  }
-
-  pickFormBasedOnLocation(path) {
-    switch (path) {
-      case "locations":
-        return <LocationForm />;
-      default:
-        return null;
-    }
   }
 
   addNewLocation(currentPath) {

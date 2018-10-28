@@ -9,8 +9,23 @@ import { Field } from "redux-form";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { hideModal } from "../actions/toggleModal";
-import { insertLocation } from "../actions/insertLocation";
 import { withRouter } from "react-router-dom";
+
+const adaptFileEventToValue = delegate => e => delegate(e.target.files[0]);
+
+const FileInput = ({
+  input: { value: omitValue, onChange, onBlur, ...inputProps },
+  meta: omitMeta,
+  ...props
+}) => (
+  <input
+    onChange={adaptFileEventToValue(onChange)}
+    onBlur={adaptFileEventToValue(onBlur)}
+    type="file"
+    {...inputProps}
+    {...props}
+  />
+);
 
 const styles = theme => ({
   container: {
@@ -31,13 +46,13 @@ const styles = theme => ({
   }
 });
 
-class LocationForm extends Component {
+class MediaForm extends Component {
   constructor(props) {
     super(props);
     this.hideModalUrl = this.hideModalUrl.bind(this);
   }
 
-  renderField(field) {
+  renderTextField(field) {
     return (
       <TextField
         className={field.stylingClass}
@@ -51,17 +66,32 @@ class LocationForm extends Component {
     );
   }
   onSubmit(values) {
+    console.log(values);
+    let formData = new FormData();
+    formData.append("mediaFile", values.picVidInput);
+    formData.append("mediaName", values.mediaName);
+    var config = {
+      headers: {
+        //"Content-Type": "multipart/form-data"
+      },
+      onUploadProgress: function(progressEvent) {
+        let percentCompleted = Math.round(
+          (progressEvent.loaded * 100) / progressEvent.total
+        );
+        console.log(percentCompleted);
+      }
+    };
+
     axios
-      .post("http://localhost:8080/locations", values)
+      .post("http://localhost:8080/media", formData, config)
       .then(response => {
         console.log(response);
-        this.props.insertLocation(response.data);
         this.hideModalUrl();
       })
-      .catch(error => console.log(error.response));
+      .catch(error => console.log(error));
   }
   hideModalUrl() {
-    this.props.history.push("/locations");
+    this.props.history.push("/media");
   }
 
   render() {
@@ -73,23 +103,16 @@ class LocationForm extends Component {
         onSubmit={handleSubmit(this.onSubmit.bind(this))}
       >
         <Field
-          name="city"
-          label="City"
-          helperText="City the store is in"
-          placeholder="New York"
+          name="mediaName"
+          label="Media Name"
+          helperText="Media name"
+          placeholder="Video 1"
           stylingClass={classes.textField}
-          component={this.renderField}
+          component={this.renderTextField}
           type="text"
         />
-        <Field
-          name="address"
-          label="Address"
-          helperText="Address of the store"
-          placeholder="Broadway Boulevard 12a"
-          stylingClass={classes.textField}
-          component={this.renderField}
-          type="text"
-        />
+        <Field name="picVidInput" component={FileInput} />
+
         <div className={classes.buttonContainer}>
           <Button
             type="submit"
@@ -97,7 +120,7 @@ class LocationForm extends Component {
             color="primary"
             className={classes.button}
           >
-            Create Location
+            Create Media entry
           </Button>
           <Button onClick={this.hideModalUrl} className={classes.button}>
             Cancel
@@ -108,21 +131,21 @@ class LocationForm extends Component {
   }
 }
 
-LocationForm = reduxForm({
-  form: "location-form"
-})(LocationForm);
+MediaForm = reduxForm({
+  form: "media-form"
+})(MediaForm);
 
-LocationForm.propTypes = {
+MediaForm.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ hideModal, insertLocation }, dispatch);
+  return bindActionCreators({ hideModal }, dispatch);
 };
 
 export default withRouter(
   connect(
     null,
     mapDispatchToProps
-  )(withStyles(styles)(LocationForm))
+  )(withStyles(styles)(MediaForm))
 );

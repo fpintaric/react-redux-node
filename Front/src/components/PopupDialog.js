@@ -27,7 +27,7 @@ class SimpleModal extends Component {
   }
 
   hideModal() {
-    this.props.history.push("/locations");
+    return false;
   }
 
   render() {

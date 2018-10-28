@@ -9,6 +9,7 @@ import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import ContentContainer from "./ContentContainer";
 import LocationsList from "./LocationsList";
+import MediaList from "./MediaList";
 import PrivateRoute from "./PrivateRoute";
 
 const styles = () => ({
@@ -39,6 +40,12 @@ class App extends Component {
               authenticated={this.props.authenticated}
               component={ContentContainer}
               childComponent={LocationsList}
+            />
+            <PrivateRoute
+              path="/media"
+              authenticated={this.props.authenticated}
+              component={ContentContainer}
+              childComponent={MediaList}
             />
           </div>
         </Router>
