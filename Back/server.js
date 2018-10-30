@@ -1,7 +1,21 @@
 const PORT = 8080;
-
+const winston = require("winston");
 const express = require("express");
 const bodyParser = require("body-parser");
+const { combine, timestamp, label, printf } = winston.format;
+
+const myFormat = printf(info => {
+  return `${info.timestamp} [${info.label}] ${info.level}: ${info.message}`;
+});
+
+const logger = winston.createLogger({
+  level: "info",
+  format: combine(label({ label: "===>" }), timestamp(), myFormat),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: "./logs/app.log" })
+  ]
+});
 
 const app = express();
 
@@ -46,5 +60,5 @@ require("./app/routes/location.routes.js")(app);
 require("./app/routes/media.routes.js")(app);
 
 app.listen(PORT, () => {
-  console.log("Server listening on port: ", PORT);
+  logger.log("info", `App started on port ${PORT}`);
 });
