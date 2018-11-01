@@ -5,14 +5,16 @@ import { Route, Redirect } from "react-router-dom";
 const PrivateRoute = ({
   component: Component,
   childComponent: ChildComponent,
+  title,
   authenticated,
+  exact,
   ...rest
 }) => (
   <Route
     {...rest}
     render={props =>
       authenticated ? (
-        <Component>
+        <Component title={title}>
           <ChildComponent />
         </Component>
       ) : (

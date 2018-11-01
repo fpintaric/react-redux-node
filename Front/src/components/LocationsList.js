@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { bindActionCreators } from "redux";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { withRouter, Switch } from "react-router-dom";
 
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -28,8 +28,17 @@ const styles = {
   }
 };
 
-const LocationItem = ({ id, city, address, deleteHandler, editHandler }) => (
-  <TableRow style={{ cursor: "pointer" }}>
+const LocationItem = ({
+  id,
+  city,
+  address,
+  deleteHandler,
+  editLocationHandler
+}) => (
+  <TableRow
+    style={{ cursor: "pointer" }}
+    onClick={() => editLocationHandler(id)}
+  >
     <TableCell component="th" scope="row">
       {city}
     </TableCell>
@@ -44,6 +53,7 @@ class LocationsList extends Component {
   constructor(props) {
     super(props);
     this.deleteLocationHandler = this.deleteLocationHandler.bind(this);
+    this.editLocationHandler = this.editLocationHandler.bind(this);
   }
 
   componentDidMount = () => {
@@ -52,6 +62,11 @@ class LocationsList extends Component {
 
   deleteLocationHandler = locationId => {
     this.props.deleteLocation(locationId);
+  };
+
+  editLocationHandler = locationId => {
+    const currentPath = this.props.location.pathname.replace("/", "");
+    this.props.history.push(`${currentPath}/${locationId}`);
   };
 
   renderLocations = locations => {
@@ -65,6 +80,7 @@ class LocationsList extends Component {
           city={location.city}
           address={location.address}
           deleteHandler={this.deleteLocationHandler}
+          editLocationHandler={this.editLocationHandler}
         />
       );
     }
@@ -83,12 +99,23 @@ class LocationsList extends Component {
           </TableRow>
         </TableHead>
         <TableBody>{this.renderLocations(locations, classes)}</TableBody>
-        <PrivateRoute
-          path="/locations/new"
-          authenticated={true}
-          component={SimpleModal}
-          childComponent={LocationForm}
-        />
+        <Switch>
+          <PrivateRoute
+            exact
+            path="/locations/new"
+            title="Create a new location"
+            authenticated={true}
+            component={SimpleModal}
+            childComponent={LocationForm}
+          />
+          <PrivateRoute
+            path="/locations/:id"
+            title="Edit location"
+            authenticated={true}
+            component={SimpleModal}
+            childComponent={LocationForm}
+          />
+        </Switch>
       </Table>
     ) : (
       <div>Loading...</div>

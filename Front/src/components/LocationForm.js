@@ -9,6 +9,9 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { hideModal } from "../actions/toggleModal";
 import { postLocation } from "../actions/postLocation";
+import { editLocation } from "../actions/editLocation";
+import { getLocation } from "../actions/getLocation";
+import { emptyActiveLocation } from "../actions/emptyActiveLocation";
 import { withRouter } from "react-router-dom";
 
 const styles = theme => ({
@@ -52,17 +55,33 @@ class LocationForm extends Component {
   onSubmit(values) {
     this.props.postLocation(values);
   }
+
+  onEdit(values) {
+    console.log(values);
+    this.props.editLocation(values);
+  }
+
   hideModalUrl() {
+    this.props.emptyActiveLocation();
     this.props.history.push("/locations");
   }
 
+  componentDidMount = () => {
+    const { match } = this.props;
+    const locationId = match.params.id;
+    if (locationId) {
+      this.props.getLocation(locationId);
+    }
+  };
+
   render() {
-    const { handleSubmit } = this.props;
-    const { classes } = this.props;
+    const { handleSubmit, classes, initialValues } = this.props;
     return (
       <form
         className={classes.container}
-        onSubmit={handleSubmit(this.onSubmit.bind(this))}
+        onSubmit={handleSubmit(
+          !initialValues ? this.onSubmit.bind(this) : this.onEdit.bind(this)
+        )}
       >
         <Field
           name="city"
@@ -109,12 +128,21 @@ LocationForm.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ hideModal, postLocation }, dispatch);
+  return bindActionCreators(
+    { hideModal, postLocation, editLocation, getLocation, emptyActiveLocation },
+    dispatch
+  );
+};
+
+const mapStateToProps = state => {
+  return {
+    initialValues: state.locations.active
+  };
 };
 
 export default withRouter(
   connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
   )(withStyles(styles)(LocationForm))
 );

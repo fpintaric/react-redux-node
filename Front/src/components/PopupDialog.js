@@ -6,6 +6,7 @@ import Modal from "@material-ui/core/Modal";
 import { connect } from "react-redux";
 import { hideModal } from "../actions/toggleModal";
 import { withRouter } from "react-router-dom";
+import Typography from "@material-ui/core/Typography";
 
 const styles = theme => ({
   paper: {
@@ -31,7 +32,7 @@ class SimpleModal extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, title } = this.props;
 
     return (
       <Modal
@@ -40,7 +41,10 @@ class SimpleModal extends Component {
         open
         onClose={this.hideModal}
       >
-        <div className={classes.paper}>{this.props.children}</div>
+        <div className={classes.paper}>
+          <Typography>{title}</Typography>
+          {this.props.children}
+        </div>
       </Modal>
     );
   }

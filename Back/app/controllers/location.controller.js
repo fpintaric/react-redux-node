@@ -59,7 +59,7 @@ exports.findOne = (req, res) => {
 };
 
 exports.update = (req, res) => {
-  if (!req.body.content) {
+  if (!req.body.city || !req.body.address) {
     return res.status(400).send({
       message: "Empty params"
     });
