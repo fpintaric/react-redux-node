@@ -33,31 +33,44 @@ const styles = theme => ({
   }
 });
 
+const validate = values => {
+  const errors = {};
+  if (!values.address) {
+    errors.address = "Required";
+  }
+  if (!values.city) {
+    errors.city = "Required";
+  }
+  return errors;
+};
+
+const renderField = field => {
+  console.log(field.meta.touched && field.meta.error);
+  return (
+    <TextField
+      className={field.stylingClass}
+      label={field.label}
+      helperText={field.helperText}
+      placeholder={field.placeholder}
+      error={(field.meta.touched && field.meta.error) === "Required"}
+      variant="standard"
+      margin="normal"
+      {...field.input}
+    />
+  );
+};
+
 class LocationForm extends Component {
   constructor(props) {
     super(props);
     this.hideModalUrl = this.hideModalUrl.bind(this);
   }
 
-  renderField(field) {
-    return (
-      <TextField
-        className={field.stylingClass}
-        label={field.label}
-        helperText={field.helperText}
-        placeholder={field.placeholder}
-        variant="standard"
-        margin="normal"
-        {...field.input}
-      />
-    );
-  }
   onSubmit(values) {
     this.props.postLocation(values);
   }
 
   onEdit(values) {
-    console.log(values);
     this.props.editLocation(values);
   }
 
@@ -89,7 +102,7 @@ class LocationForm extends Component {
           helperText="City the store is in"
           placeholder="New York"
           stylingClass={classes.textField}
-          component={this.renderField}
+          component={renderField}
           type="text"
         />
         <Field
@@ -98,7 +111,7 @@ class LocationForm extends Component {
           helperText="Address of the store"
           placeholder="Broadway Boulevard 12a"
           stylingClass={classes.textField}
-          component={this.renderField}
+          component={renderField}
           type="text"
         />
         <div className={classes.buttonContainer}>
@@ -108,7 +121,7 @@ class LocationForm extends Component {
             color="primary"
             className={classes.button}
           >
-            Create Location
+            {!initialValues ? "Create Location" : "Edit location"}
           </Button>
           <Button onClick={this.hideModalUrl} className={classes.button}>
             Cancel
@@ -120,7 +133,8 @@ class LocationForm extends Component {
 }
 
 LocationForm = reduxForm({
-  form: "location-form"
+  form: "location-form",
+  validate
 })(LocationForm);
 
 LocationForm.propTypes = {
