@@ -10,7 +10,6 @@ export function editLocation(values) {
   return dispatch => {
     request
       .then(({ data }) => {
-        console.log(data);
         dispatch({
           type: INSERT_LOCATION,
           payload: data

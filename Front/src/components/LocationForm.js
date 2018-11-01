@@ -8,10 +8,10 @@ import { Field } from "redux-form";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { hideModal } from "../actions/toggleModal";
-import { postLocation } from "../actions/postLocation";
-import { editLocation } from "../actions/editLocation";
-import { getLocation } from "../actions/getLocation";
-import { emptyActiveLocation } from "../actions/emptyActiveLocation";
+import { postLocation } from "../actions/locations/postLocation";
+import { editLocation } from "../actions/locations/editLocation";
+import { getLocation } from "../actions/locations/getLocation";
+import { emptyActiveLocation } from "../actions/locations/emptyActiveLocation";
 import { withRouter } from "react-router-dom";
 
 const styles = theme => ({

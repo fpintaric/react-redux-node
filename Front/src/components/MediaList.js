@@ -12,6 +12,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
+import { getAllMedia } from "../actions/media/getAllMedia";
+
 import SimpleModal from "./PopupDialog";
 import PrivateRoute from "./PrivateRoute";
 
@@ -26,12 +28,11 @@ const styles = {
   }
 };
 
-const MediaItem = ({ id, city, address, deleteHandler, editHandler }) => (
+const MediaItem = ({ id, title, deleteHandler, editHandler }) => (
   <TableRow style={{ cursor: "pointer" }}>
     <TableCell component="th" scope="row">
-      {city}
+      {title}
     </TableCell>
-    <TableCell>{address}</TableCell>
     <TableCell>
       <DeleteForeverIcon onClick={() => deleteHandler(id)} />
     </TableCell>
@@ -39,17 +40,32 @@ const MediaItem = ({ id, city, address, deleteHandler, editHandler }) => (
 );
 
 class MediaList extends Component {
+  componentDidMount = () => {
+    this.props.getAllMedia();
+  };
+
+  renderMedia = medias => {
+    let rows = [];
+    for (let key in medias) {
+      let media = medias[key];
+      rows.push(
+        <MediaItem key={media._id} id={media._id} title={media.title} />
+      );
+    }
+    return rows;
+  };
+
   render() {
     const { classes, media } = this.props;
     return true ? (
       <Table className={classes.table}>
         <TableHead>
           <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Duration</TableCell>
+            <TableCell>Title</TableCell>
             <TableCell />
           </TableRow>
         </TableHead>
+        <TableBody>{this.renderMedia(media)}</TableBody>
         <PrivateRoute
           path="/media/new"
           authenticated={true}
@@ -68,11 +84,13 @@ MediaList.propTypes = {
 };
 
 const mapStateToProps = state => {
-  return {};
+  return {
+    media: state.media.all
+  };
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({}, dispatch);
+  return bindActionCreators({ getAllMedia }, dispatch);
 };
 
 export default withRouter(

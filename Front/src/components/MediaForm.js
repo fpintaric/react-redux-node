@@ -84,10 +84,9 @@ class MediaForm extends Component {
     axios
       .post("http://localhost:8080/media", formData, config)
       .then(response => {
-        console.log(response);
         this.hideModalUrl();
       })
-      .catch(error => console.log(error));
+      .catch(error => console.log(error.response));
   }
   hideModalUrl() {
     this.props.history.push("/media");

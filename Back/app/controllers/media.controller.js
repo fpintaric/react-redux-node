@@ -31,3 +31,15 @@ exports.create = (req, res) => {
       });
     });
 };
+
+exports.findAll = (req, res) => {
+  Media.find()
+    .then(medias => {
+      res.send(medias);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: err.message || "Unknown error while retrieving media"
+      });
+    });
+};

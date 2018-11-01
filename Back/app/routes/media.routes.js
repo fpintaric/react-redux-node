@@ -3,5 +3,8 @@ var upload = multer({ dest: "uploads/" });
 
 module.exports = app => {
   const media = require("../controllers/media.controller.js");
+
   app.post("/media", upload.single("mediaFile"), media.create);
+
+  app.get("/media", media.findAll);
 };

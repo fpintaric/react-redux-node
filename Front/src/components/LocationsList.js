@@ -15,8 +15,8 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import SimpleModal from "./PopupDialog";
 import PrivateRoute from "./PrivateRoute";
 
-import { getLocations } from "../actions/getLocations";
-import { deleteLocation } from "../actions/deleteLocation";
+import { getLocations } from "../actions/locations/getLocations";
+import { deleteLocation } from "../actions/locations/deleteLocation";
 import LocationForm from "./LocationForm";
 
 const styles = {
@@ -44,7 +44,12 @@ const LocationItem = ({
     </TableCell>
     <TableCell>{address}</TableCell>
     <TableCell>
-      <DeleteForeverIcon onClick={() => deleteHandler(id)} />
+      <DeleteForeverIcon
+        onClick={e => {
+          e.stopPropagation();
+          deleteHandler(id);
+        }}
+      />
     </TableCell>
   </TableRow>
 );

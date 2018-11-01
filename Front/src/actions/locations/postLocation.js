@@ -7,7 +7,6 @@ export function postLocation(values) {
   return dispatch => {
     request
       .then(response => {
-        console.log(response);
         dispatch({
           type: INSERT_LOCATION,
           payload: response.data

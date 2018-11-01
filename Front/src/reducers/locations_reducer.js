@@ -5,9 +5,9 @@ import {
   GET_LOCATIONS,
   GET_LOCATION,
   EMPTY_ACTIVE_LOCATION
-} from "../actions/constants";
+} from "../actions/locations/constants";
 
-export default function(previousState = {}, action) {
+export default (previousState = {}, action) => {
   switch (action.type) {
     case GET_LOCATIONS:
       return {
@@ -44,4 +44,4 @@ export default function(previousState = {}, action) {
     default:
       return previousState;
   }
-}
+};
