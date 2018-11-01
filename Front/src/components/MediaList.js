@@ -13,6 +13,7 @@ import TableRow from "@material-ui/core/TableRow";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 import { getAllMedia } from "../actions/media/getAllMedia";
+import { deleteMedia } from "../actions/media/deleteMedia";
 
 import SimpleModal from "./PopupDialog";
 import PrivateRoute from "./PrivateRoute";
@@ -34,7 +35,12 @@ const MediaItem = ({ id, title, deleteHandler, editHandler }) => (
       {title}
     </TableCell>
     <TableCell>
-      <DeleteForeverIcon onClick={() => deleteHandler(id)} />
+      <DeleteForeverIcon
+        onClick={e => {
+          e.stopPropagation();
+          deleteHandler(id);
+        }}
+      />
     </TableCell>
   </TableRow>
 );
@@ -44,12 +50,21 @@ class MediaList extends Component {
     this.props.getAllMedia();
   };
 
+  deleteMediaHandler = mediaId => {
+    this.props.deleteMedia(mediaId);
+  };
+
   renderMedia = medias => {
     let rows = [];
     for (let key in medias) {
       let media = medias[key];
       rows.push(
-        <MediaItem key={media._id} id={media._id} title={media.title} />
+        <MediaItem
+          key={media._id}
+          id={media._id}
+          title={media.title}
+          deleteHandler={this.deleteMediaHandler}
+        />
       );
     }
     return rows;
@@ -90,7 +105,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ getAllMedia }, dispatch);
+  return bindActionCreators({ getAllMedia, deleteMedia }, dispatch);
 };
 
 export default withRouter(

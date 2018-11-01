@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import axios from "axios";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { reduxForm } from "redux-form";
@@ -9,22 +8,39 @@ import { Field } from "redux-form";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { hideModal } from "../actions/toggleModal";
+import { postMedia } from "../actions/media/postMedia";
 import { withRouter } from "react-router-dom";
 
-const adaptFileEventToValue = delegate => e => delegate(e.target.files[0]);
+const adaptFileEventToValue = delegate => e => {
+  const file = e.target.files[0];
+  delegate(file);
+  console.log(file);
+};
 
 const FileInput = ({
   input: { value: omitValue, onChange, onBlur, ...inputProps },
   meta: omitMeta,
   ...props
 }) => (
-  <input
-    onChange={adaptFileEventToValue(onChange)}
-    onBlur={adaptFileEventToValue(onBlur)}
-    type="file"
-    {...inputProps}
-    {...props}
-  />
+  <div>
+    <input
+      onChange={adaptFileEventToValue(onChange)}
+      onBlur={adaptFileEventToValue(onBlur)}
+      type="file"
+      {...inputProps}
+      {...props}
+      accept="image/*"
+      style={{ display: "none" }}
+      id="raised-button-file"
+    />
+
+    <label htmlFor="raised-button-file">
+      <Button variant="contained" component="span">
+        Upload
+      </Button>
+    </label>
+    <p>Filename</p>
+  </div>
 );
 
 const styles = theme => ({
@@ -69,25 +85,10 @@ class MediaForm extends Component {
     let formData = new FormData();
     formData.append("mediaFile", values.picVidInput);
     formData.append("mediaName", values.mediaName);
-    var config = {
-      headers: {
-        "Content-Type": "multipart/form-data"
-      },
-      onUploadProgress: function(progressEvent) {
-        let percentCompleted = Math.round(
-          (progressEvent.loaded * 100) / progressEvent.total
-        );
-        console.log(percentCompleted);
-      }
-    };
 
-    axios
-      .post("http://localhost:8080/media", formData, config)
-      .then(response => {
-        this.hideModalUrl();
-      })
-      .catch(error => console.log(error.response));
+    this.props.postMedia(formData);
   }
+
   hideModalUrl() {
     this.props.history.push("/media");
   }
@@ -138,7 +139,7 @@ MediaForm.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ hideModal }, dispatch);
+  return bindActionCreators({ hideModal, postMedia }, dispatch);
 };
 
 export default withRouter(

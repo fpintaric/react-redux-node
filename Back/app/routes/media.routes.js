@@ -7,4 +7,6 @@ module.exports = app => {
   app.post("/media", upload.single("mediaFile"), media.create);
 
   app.get("/media", media.findAll);
+
+  app.delete("/media/:mediaId", media.delete);
 };
