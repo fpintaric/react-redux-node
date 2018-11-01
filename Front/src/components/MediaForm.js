@@ -66,13 +66,12 @@ class MediaForm extends Component {
     );
   }
   onSubmit(values) {
-    console.log(values);
     let formData = new FormData();
     formData.append("mediaFile", values.picVidInput);
     formData.append("mediaName", values.mediaName);
     var config = {
       headers: {
-        //"Content-Type": "multipart/form-data"
+        "Content-Type": "multipart/form-data"
       },
       onUploadProgress: function(progressEvent) {
         let percentCompleted = Math.round(

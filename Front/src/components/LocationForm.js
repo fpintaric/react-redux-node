@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import axios from "axios";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { reduxForm } from "redux-form";
@@ -9,7 +8,7 @@ import { Field } from "redux-form";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { hideModal } from "../actions/toggleModal";
-import { insertLocation } from "../actions/insertLocation";
+import { postLocation } from "../actions/postLocation";
 import { withRouter } from "react-router-dom";
 
 const styles = theme => ({
@@ -51,14 +50,7 @@ class LocationForm extends Component {
     );
   }
   onSubmit(values) {
-    axios
-      .post("http://localhost:8080/locations", values)
-      .then(response => {
-        console.log(response);
-        this.props.insertLocation(response.data);
-        this.hideModalUrl();
-      })
-      .catch(error => console.log(error.response));
+    this.props.postLocation(values);
   }
   hideModalUrl() {
     this.props.history.push("/locations");
@@ -117,7 +109,7 @@ LocationForm.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ hideModal, insertLocation }, dispatch);
+  return bindActionCreators({ hideModal, postLocation }, dispatch);
 };
 
 export default withRouter(
