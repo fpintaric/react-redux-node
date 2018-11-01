@@ -1,14 +1,16 @@
+import { SHOW_MODAL, HIDE_MODAL, TOGGLE_MODAL } from "../actions/constants";
+
 export default function(previousState = { open: false }, action) {
   switch (action.type) {
-    case "SHOW_MODAL":
+    case SHOW_MODAL:
       return {
         open: true
       };
-    case "HIDE_MODAL":
+    case HIDE_MODAL:
       return {
         open: false
       };
-    case "TOGGLE_MODAL":
+    case TOGGLE_MODAL:
       return {
         open: !previousState.open
       };

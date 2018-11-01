@@ -1,0 +1,8 @@
+export const DELETE_LOCATION = "DELETE_LOCATION";
+export const INSERT_LOCATION = "INSERT LOCATION";
+export const GET_LOCATIONS = "GET_LOCATIONS";
+export const POST_LOCATION = "POST_LOCATION";
+
+export const SHOW_MODAL = "SHOW_MODAL";
+export const HIDE_MODAL = "HIDE_MODAL";
+export const TOGGLE_MODAL = "TOGGLE_MODAL";
