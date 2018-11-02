@@ -21,10 +21,13 @@ mongoose
     }
   )
   .then(() => {
-    console.log("Successfully connected to the database");
+    logger.log("info", "Successfully connected to the database");
   })
   .catch(err => {
-    console.log("Could not connect to the database. Exiting now...", err);
+    logger.log(
+      "error",
+      `Could not connect to the database. Exiting now. Error:  ${err}`
+    );
     process.exit();
   });
 
