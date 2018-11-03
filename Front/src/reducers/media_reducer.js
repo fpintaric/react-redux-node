@@ -3,7 +3,8 @@ import { keyBy } from "lodash";
 import {
   GET_ALL_MEDIA,
   DELETE_MEDIA,
-  INSERT_MEDIA
+  INSERT_MEDIA,
+  FILE_SELECTED
 } from "../actions/media/constants";
 
 export default (previousState = {}, action) => {
@@ -28,6 +29,11 @@ export default (previousState = {}, action) => {
       delete stateCopy[id];
       return {
         all: stateCopy
+      };
+
+    case FILE_SELECTED:
+      return {
+        selectedFile: action.payload
       };
     default:
       return previousState;

@@ -68,10 +68,12 @@ class LocationForm extends Component {
 
   onSubmit(values) {
     this.props.postLocation(values);
+    this.hideModalUrl();
   }
 
   onEdit(values) {
     this.props.editLocation(values);
+    this.hideModalUrl();
   }
 
   hideModalUrl() {

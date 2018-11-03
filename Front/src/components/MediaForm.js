@@ -9,12 +9,13 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { hideModal } from "../actions/toggleModal";
 import { postMedia } from "../actions/media/postMedia";
+import { fileSelect } from "../actions/media/fileSelect";
 import { withRouter } from "react-router-dom";
 
 const adaptFileEventToValue = delegate => e => {
   const file = e.target.files[0];
   delegate(file);
-  console.log(file);
+  fileSelect(file.name);
 };
 
 const FileInput = ({
@@ -39,7 +40,7 @@ const FileInput = ({
         Upload
       </Button>
     </label>
-    <p>Filename</p>
+    <p>{}</p>
   </div>
 );
 
@@ -81,12 +82,14 @@ class MediaForm extends Component {
       />
     );
   }
+
   onSubmit(values) {
     let formData = new FormData();
     formData.append("mediaFile", values.picVidInput);
     formData.append("mediaName", values.mediaName);
 
     this.props.postMedia(formData);
+    this.hideModalUrl();
   }
 
   hideModalUrl() {
@@ -138,13 +141,19 @@ MediaForm.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
+const mapStateToProps = state => {
+  return {
+    fileName: state.media.selectedFile
+  };
+};
+
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ hideModal, postMedia }, dispatch);
+  return bindActionCreators({ hideModal, postMedia, fileSelect }, dispatch);
 };
 
 export default withRouter(
   connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
   )(withStyles(styles)(MediaForm))
 );
