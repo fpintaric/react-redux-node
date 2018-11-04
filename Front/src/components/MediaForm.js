@@ -15,34 +15,49 @@ import { withRouter } from "react-router-dom";
 const adaptFileEventToValue = delegate => e => {
   const file = e.target.files[0];
   delegate(file);
-  fileSelect(file.name);
+  changeFileInputLabel(file.name);
+};
+
+const changeFileInputLabel = (name = "") => {
+  let fileLabel = document.querySelector("#fileNameLabel");
+  fileLabel.textContent = name;
+};
+
+const fileUploadDivStyle = {
+  width: "100%",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center"
 };
 
 const FileInput = ({
   input: { value: omitValue, onChange, onBlur, ...inputProps },
   meta: omitMeta,
   ...props
-}) => (
-  <div>
-    <input
-      onChange={adaptFileEventToValue(onChange)}
-      onBlur={adaptFileEventToValue(onBlur)}
-      type="file"
-      {...inputProps}
-      {...props}
-      accept="image/*"
-      style={{ display: "none" }}
-      id="raised-button-file"
-    />
+}) => {
+  return (
+    <div style={fileUploadDivStyle}>
+      <input
+        onChange={adaptFileEventToValue(onChange)}
+        onBlur={adaptFileEventToValue(onBlur)}
+        type="file"
+        {...inputProps}
+        {...props}
+        accept="image/*"
+        style={{ display: "none" }}
+        id="raised-button-file"
+      />
 
-    <label htmlFor="raised-button-file">
-      <Button variant="contained" component="span">
-        Upload
-      </Button>
-    </label>
-    <p>{}</p>
-  </div>
-);
+      <label htmlFor="raised-button-file">
+        <Button variant="contained" component="span">
+          Upload
+        </Button>
+      </label>
+      <p id="fileNameLabel">Please upload a file</p>
+    </div>
+  );
+};
 
 const styles = theme => ({
   container: {
