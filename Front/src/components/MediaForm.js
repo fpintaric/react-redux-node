@@ -10,6 +10,7 @@ import Button from "@material-ui/core/Button";
 import { hideModal } from "../actions/toggleModal";
 import { postMedia } from "../actions/media/postMedia";
 import { getSingleMedia } from "../actions/media/getSingleMedia";
+import { emptyActiveMedia } from "../actions/media/emptyActiveMedia";
 import { withRouter } from "react-router-dom";
 
 const adaptFileEventToValue = delegate => e => {
@@ -108,6 +109,7 @@ class MediaForm extends Component {
   }
 
   hideModalUrl() {
+    this.props.emptyActiveMedia();
     this.props.history.push("/media");
   }
 
@@ -171,7 +173,10 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ hideModal, postMedia, getSingleMedia }, dispatch);
+  return bindActionCreators(
+    { hideModal, postMedia, getSingleMedia, emptyActiveMedia },
+    dispatch
+  );
 };
 
 export default withRouter(
