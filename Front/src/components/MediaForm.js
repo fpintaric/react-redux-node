@@ -7,11 +7,18 @@ import { withStyles } from "@material-ui/core/styles";
 import { Field } from "redux-form";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
+import CardActionArea from "@material-ui/core/CardActionArea";
+import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
+import Typography from "@material-ui/core/Typography";
 import { hideModal } from "../actions/toggleModal";
 import { postMedia } from "../actions/media/postMedia";
 import { getSingleMedia } from "../actions/media/getSingleMedia";
 import { emptyActiveMedia } from "../actions/media/emptyActiveMedia";
 import { withRouter } from "react-router-dom";
+import "video-react/dist/video-react.css";
+import { Player } from "video-react";
 
 const adaptFileEventToValue = delegate => e => {
   const file = e.target.files[0];
@@ -76,6 +83,13 @@ const styles = theme => ({
   },
   buttonContainer: {
     display: "flex"
+  },
+  card: {
+    width: "100%"
+  },
+  media: {
+    height: 140,
+    width: "100%"
   }
 });
 
@@ -139,6 +153,27 @@ class MediaForm extends Component {
           type="text"
         />
         <Field name="file" component={FileInput} />
+
+        <Card className={classes.card}>
+          <CardActionArea>
+            <CardMedia
+              className={classes.media}
+              src="http://localhost:8080/download"
+              title="Media"
+            />
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="h2">
+                Lizard
+              </Typography>
+              <Typography component="p">
+                Lizards are a widespread group of squamate reptiles, with over
+                6,000 species, ranging across all continents except Antarctica
+              </Typography>
+            </CardContent>
+          </CardActionArea>
+        </Card>
+
+        <Player playsInline src="http://localhost:8080/download" />
 
         <div className={classes.buttonContainer}>
           <Button

@@ -45,6 +45,12 @@ app.get("/", (req, res) => {
   res.json({ message: "You hit the root route!" });
 });
 
+app.get("/download", function(req, res) {
+  logger.log("info", "getting media");
+  var file = __dirname + "/uploads/SampleVideo_1280x720_10mb.mp4";
+  res.download(file); // Set disposition and send it.
+});
+
 require("./app/routes/location.routes.js")(app);
 require("./app/routes/media.routes.js")(app);
 
