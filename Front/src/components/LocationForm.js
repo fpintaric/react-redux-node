@@ -45,7 +45,6 @@ const validate = values => {
 };
 
 const renderField = field => {
-  console.log(field.meta.touched && field.meta.error);
   return (
     <TextField
       className={field.stylingClass}

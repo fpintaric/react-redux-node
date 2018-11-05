@@ -45,7 +45,7 @@ exports.findAll = (req, res) => {
 };
 
 exports.findOne = (req, res) => {
-  logger.log("info", "LocationController.findOne");
+  logger.log("info", "LocationController.findOne()");
   Location.findById(req.params.locationId)
     .then(location => {
       if (!location) {

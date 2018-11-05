@@ -5,5 +5,4 @@ export const INSERT_MEDIA = "INSERT MEDIA";
 export const GET_MEDIA = "GET_MEDIA";
 export const POST_MEDIA = "POST_MEDIA";
 export const EDIT_MEDIA = "EDIT_MEDIA";
-
-export const FILE_SELECTED = "FILE_SELECTED";
+export const GET_SINGLE_MEDIA = "GET_SINGLE_MEDIA";

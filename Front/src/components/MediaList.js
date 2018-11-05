@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { bindActionCreators } from "redux";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { withRouter, Switch } from "react-router-dom";
 
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -29,8 +29,8 @@ const styles = {
   }
 };
 
-const MediaItem = ({ id, title, deleteHandler, editHandler }) => (
-  <TableRow style={{ cursor: "pointer" }}>
+const MediaItem = ({ id, title, deleteHandler, editMediaHandler }) => (
+  <TableRow style={{ cursor: "pointer" }} onClick={() => editMediaHandler(id)}>
     <TableCell component="th" scope="row">
       {title}
     </TableCell>
@@ -46,12 +46,23 @@ const MediaItem = ({ id, title, deleteHandler, editHandler }) => (
 );
 
 class MediaList extends Component {
+  constructor(props) {
+    super(props);
+    this.deleteMediaHandler = this.deleteMediaHandler.bind(this);
+    this.editMediaHandler = this.editMediaHandler.bind(this);
+  }
+
   componentDidMount = () => {
     this.props.getAllMedia();
   };
 
   deleteMediaHandler = mediaId => {
     this.props.deleteMedia(mediaId);
+  };
+
+  editMediaHandler = mediaId => {
+    const currentPath = this.props.location.pathname.replace("/", "");
+    this.props.history.push(`${currentPath}/${mediaId}`);
   };
 
   renderMedia = medias => {
@@ -64,6 +75,7 @@ class MediaList extends Component {
           id={media._id}
           title={media.title}
           deleteHandler={this.deleteMediaHandler}
+          editMediaHandler={this.editMediaHandler}
         />
       );
     }
@@ -81,12 +93,21 @@ class MediaList extends Component {
           </TableRow>
         </TableHead>
         <TableBody>{this.renderMedia(media)}</TableBody>
-        <PrivateRoute
-          path="/media/new"
-          authenticated={true}
-          component={SimpleModal}
-          childComponent={MediaForm}
-        />
+        <Switch>
+          <PrivateRoute
+            path="/media/new"
+            authenticated={true}
+            component={SimpleModal}
+            childComponent={MediaForm}
+          />
+          <PrivateRoute
+            path="/media/:id"
+            title="Edit media"
+            authenticated={true}
+            component={SimpleModal}
+            childComponent={MediaForm}
+          />
+        </Switch>
       </Table>
     ) : (
       <div>Loading...</div>

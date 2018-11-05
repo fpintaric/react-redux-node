@@ -9,7 +9,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { hideModal } from "../actions/toggleModal";
 import { postMedia } from "../actions/media/postMedia";
-import { fileSelect } from "../actions/media/fileSelect";
+import { getSingleMedia } from "../actions/media/getSingleMedia";
 import { withRouter } from "react-router-dom";
 
 const adaptFileEventToValue = delegate => e => {
@@ -100,8 +100,8 @@ class MediaForm extends Component {
 
   onSubmit(values) {
     let formData = new FormData();
-    formData.append("mediaFile", values.picVidInput);
-    formData.append("mediaName", values.mediaName);
+    formData.append("file", values.file);
+    formData.append("title", values.title);
 
     this.props.postMedia(formData);
     this.hideModalUrl();
@@ -110,6 +110,14 @@ class MediaForm extends Component {
   hideModalUrl() {
     this.props.history.push("/media");
   }
+
+  componentDidMount = () => {
+    const { match } = this.props;
+    const mediaId = match.params.id;
+    if (mediaId) {
+      this.props.getSingleMedia(mediaId);
+    }
+  };
 
   render() {
     const { handleSubmit } = this.props;
@@ -120,7 +128,7 @@ class MediaForm extends Component {
         onSubmit={handleSubmit(this.onSubmit.bind(this))}
       >
         <Field
-          name="mediaName"
+          name="title"
           label="Media Name"
           helperText="Media name"
           placeholder="Video 1"
@@ -128,7 +136,7 @@ class MediaForm extends Component {
           component={this.renderTextField}
           type="text"
         />
-        <Field name="picVidInput" component={FileInput} />
+        <Field name="file" component={FileInput} />
 
         <div className={classes.buttonContainer}>
           <Button
@@ -158,12 +166,12 @@ MediaForm.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    fileName: state.media.selectedFile
+    initialValues: state.media.active
   };
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ hideModal, postMedia, fileSelect }, dispatch);
+  return bindActionCreators({ hideModal, postMedia, getSingleMedia }, dispatch);
 };
 
 export default withRouter(

@@ -4,7 +4,8 @@ import {
   GET_ALL_MEDIA,
   DELETE_MEDIA,
   INSERT_MEDIA,
-  FILE_SELECTED
+  GET_SINGLE_MEDIA,
+  EMPTY_ACTIVE_MEDIA
 } from "../actions/media/constants";
 
 export default (previousState = {}, action) => {
@@ -30,10 +31,16 @@ export default (previousState = {}, action) => {
       return {
         all: stateCopy
       };
-
-    case FILE_SELECTED:
+    case GET_SINGLE_MEDIA:
+      const media = action.payload;
       return {
-        selectedFile: action.payload
+        ...previousState,
+        active: media
+      };
+    case EMPTY_ACTIVE_MEDIA:
+      return {
+        ...previousState,
+        active: null
       };
     default:
       return previousState;

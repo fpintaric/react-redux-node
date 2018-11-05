@@ -4,7 +4,7 @@ const fs = require("fs");
 
 exports.create = (req, res) => {
   logger.log("info", "MediaController.create()");
-  if (!req.body.mediaName || !req.file) {
+  if (!req.body.title || !req.file) {
     logger.log("error", "Missing params");
     return res.status(400).send({
       message: "Missing params"
@@ -13,7 +13,7 @@ exports.create = (req, res) => {
 
   const uploadedFile = req.file;
   const media = new Media({
-    title: req.body.mediaName,
+    title: req.body.title,
     file: {
       originalName: uploadedFile.originalname,
       encoding: uploadedFile.encoding,
@@ -47,6 +47,77 @@ exports.findAll = (req, res) => {
       logger.log("error", "Unknown error while retrieving media");
       res.status(500).send({
         message: err.message || "Unknown error while retrieving media"
+      });
+    });
+};
+
+exports.findOne = (req, res) => {
+  logger.log("info", "MediaController.findOne()");
+  Media.findById(req.params.mediaId)
+    .then(media => {
+      if (!media) {
+        logger.log("info", `Cannot find media with id: ${req.params.mediaId}`);
+        return res.status(404).send({
+          message: "Cannot find media with id: " + req.params.mediaId
+        });
+      }
+      res.send(media);
+    })
+    .catch(err => {
+      if (err.kind === "ObjectId") {
+        logger.log("info", `Cannot find media with id: ${req.params.mediaId}`);
+        return res.status(404).send({
+          message: "Cannot find media with id: " + req.params.mediaId
+        });
+      }
+      logger.log(
+        "error",
+        `Error while finding media with id: ${req.params.mediaId}`
+      );
+      return res.status(500).send({
+        message: "Error retrieving media with id " + req.params.mediaId
+      });
+    });
+};
+
+exports.update = (req, res) => {
+  logger.log("info", "MediaController.update()");
+  if (!req.body.title || !req.file) {
+    logger.log("error", "Empty params");
+    return res.status(400).send({
+      message: "Empty params"
+    });
+  }
+  Media.findByIdAndUpdate(
+    req.params.mediaId,
+    {
+      title: req.body.title,
+      file: req.file
+    },
+    { new: true }
+  )
+    .then(media => {
+      if (!media) {
+        logger.log("info", `Cannot find media with id: ${req.params.mediaId}`);
+        return res.status(404).send({
+          message: "media not found with id " + req.params.mediaId
+        });
+      }
+      res.send(media);
+    })
+    .catch(err => {
+      if (err.kind === "ObjectId") {
+        logger.log("info", `Cannot find media with id: ${req.params.mediaId}`);
+        return res.status(404).send({
+          message: "media not found with id " + req.params.mediaId
+        });
+      }
+      logger.log(
+        "error",
+        `Error updating media with id: ${req.params.mediaId}`
+      );
+      return res.status(500).send({
+        message: "Error updating media with id " + req.params.mediaId
       });
     });
 };
