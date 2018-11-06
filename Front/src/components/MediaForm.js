@@ -9,6 +9,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { hideModal } from "../actions/toggleModal";
 import { postMedia } from "../actions/media/postMedia";
+import { editMedia } from "../actions/media/editMedia";
 import { getSingleMedia } from "../actions/media/getSingleMedia";
 import { emptyActiveMedia } from "../actions/media/emptyActiveMedia";
 import { withRouter } from "react-router-dom";
@@ -117,6 +118,11 @@ class MediaForm extends Component {
     this.hideModalUrl();
   }
 
+  onEdit(values) {
+    this.props.editMedia(values);
+    this.hideModalUrl();
+  }
+
   hideModalUrl() {
     this.props.emptyActiveMedia();
     this.props.history.push("/media");
@@ -131,19 +137,26 @@ class MediaForm extends Component {
   };
 
   render() {
-    const { handleSubmit, classes, match } = this.props;
+    const { handleSubmit, classes, match, initialValues } = this.props;
     let fileNameOnDisk = "";
-    if (this.props.initialValues) {
-      fileNameOnDisk = this.props.initialValues.file.fileName;
+    if (initialValues && initialValues.file) {
+      fileNameOnDisk = initialValues.file.fileName;
     }
     const mediaId = match.params.id;
     const fileUrl = `http://localhost:8080/download?file=${fileNameOnDisk}`;
-    let player = mediaId ? <Player playsInline src={fileUrl} /> : null;
+    const player = mediaId ? (
+      <Player playsInline src={fileNameOnDisk ? fileUrl : ""} />
+    ) : null;
+    const uploadButton = !mediaId ? (
+      <Field name="file" component={FileInput} />
+    ) : null;
 
     return (
       <form
         className={classes.container}
-        onSubmit={handleSubmit(this.onSubmit.bind(this))}
+        onSubmit={handleSubmit(
+          !initialValues ? this.onSubmit.bind(this) : this.onEdit.bind(this)
+        )}
       >
         <Field
           name="title"
@@ -154,7 +167,8 @@ class MediaForm extends Component {
           component={this.renderTextField}
           type="text"
         />
-        <Field name="file" component={FileInput} />
+
+        {uploadButton}
 
         {player}
 
@@ -165,7 +179,7 @@ class MediaForm extends Component {
             color="primary"
             className={classes.button}
           >
-            Create Media entry
+            {!mediaId ? "Create Media" : "Edit media"}
           </Button>
           <Button onClick={this.hideModalUrl} className={classes.button}>
             Cancel
@@ -192,7 +206,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
-    { hideModal, postMedia, getSingleMedia, emptyActiveMedia },
+    { hideModal, postMedia, editMedia, getSingleMedia, emptyActiveMedia },
     dispatch
   );
 };

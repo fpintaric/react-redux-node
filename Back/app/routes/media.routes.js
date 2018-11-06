@@ -10,7 +10,7 @@ module.exports = app => {
 
   app.get("/media/:mediaId", media.findOne);
 
-  app.put("media/:mediaId", media.update);
+  app.put("/media/:mediaId", media.update);
 
   app.delete("/media/:mediaId", media.delete);
 };

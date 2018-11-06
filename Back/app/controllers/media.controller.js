@@ -82,7 +82,7 @@ exports.findOne = (req, res) => {
 
 exports.update = (req, res) => {
   logger.log("info", "MediaController.update()");
-  if (!req.body.title || !req.file) {
+  if (!req.body.title && !req.file) {
     logger.log("error", "Empty params");
     return res.status(400).send({
       message: "Empty params"
@@ -91,8 +91,7 @@ exports.update = (req, res) => {
   Media.findByIdAndUpdate(
     req.params.mediaId,
     {
-      title: req.body.title,
-      file: req.file
+      title: req.body.title
     },
     { new: true }
   )
@@ -133,7 +132,22 @@ exports.delete = (req, res) => {
           message: "Media not found with id " + req.params.mediaId
         });
       }
-      fs.unlink(media.file.path, () => {
+      if (media.file) {
+        fs.unlink(media.file.path, () => {
+          Media.findByIdAndRemove(media._id).then(media => {
+            if (!media) {
+              logger.log(
+                "info",
+                `Media not found with id ${req.params.mediaId}`
+              );
+              return res.status(404).send({
+                message: "Media not found with id " + media._id
+              });
+            }
+            res.send({ message: "Media deleted successfully" });
+          });
+        });
+      } else {
         Media.findByIdAndRemove(media._id).then(media => {
           if (!media) {
             logger.log("info", `Media not found with id ${req.params.mediaId}`);
@@ -143,7 +157,7 @@ exports.delete = (req, res) => {
           }
           res.send({ message: "Media deleted successfully" });
         });
-      });
+      }
     })
     .catch(err => {
       if (err.kind === "ObjectId" || err.name === "NotFound") {
