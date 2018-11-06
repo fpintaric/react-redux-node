@@ -46,8 +46,9 @@ app.get("/", (req, res) => {
 });
 
 app.get("/download", function(req, res) {
-  logger.log("info", "getting media");
-  var file = __dirname + "/uploads/SampleVideo_1280x720_10mb.mp4";
+  logger.log("info", `getting media, requested file: ${req.query.file}`);
+  const requestedFile = req.query.file;
+  var file = __dirname + `/uploads/${requestedFile}`;
   res.download(file); // Set disposition and send it.
 });
 
