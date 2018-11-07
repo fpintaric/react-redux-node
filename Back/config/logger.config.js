@@ -7,7 +7,13 @@ const myFormat = printf(info => {
 
 const logger = winston.createLogger({
   level: "info",
-  format: combine(label({ label: "===>" }), timestamp(), myFormat),
+  format: combine(
+    label({ label: "===>" }),
+    timestamp({
+      format: "DD.MM.YYYY HH:mm:ss"
+    }),
+    myFormat
+  ),
   transports: [
     new winston.transports.Console(),
     new winston.transports.File({ filename: "./logs/app.log" })
