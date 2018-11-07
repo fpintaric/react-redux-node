@@ -7,6 +7,9 @@ import { withStyles } from "@material-ui/core/styles";
 import { Field } from "redux-form";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
 import { hideModal } from "../actions/toggleModal";
 import { postMedia } from "../actions/media/postMedia";
 import { editMedia } from "../actions/media/editMedia";
@@ -128,6 +131,40 @@ class MediaForm extends Component {
     this.props.history.push("/media");
   }
 
+  getFileTypeFromFileName(filename) {
+    const filenameArraySplitByDot = filename.split(".");
+    const extension =
+      filenameArraySplitByDot[filenameArraySplitByDot.length - 1];
+    switch (extension) {
+      case "mp4":
+        return "VID";
+      case "jpg":
+        return "PIC";
+      default:
+        return null;
+    }
+  }
+
+  returnMediaViewer(fileType, fileUrl) {
+    switch (fileType) {
+      case "VID":
+        return <Player playsInline src={fileUrl} />;
+      case "PIC":
+        return (
+          <Card style={{ width: "100%" }}>
+            <CardContent style={{ width: "100%" }}>
+              <CardMedia
+                style={{ height: "200px", width: "100%" }}
+                image={fileUrl}
+              />
+            </CardContent>
+          </Card>
+        );
+      default:
+        return null;
+    }
+  }
+
   componentDidMount = () => {
     const { match } = this.props;
     const mediaId = match.params.id;
@@ -138,15 +175,16 @@ class MediaForm extends Component {
 
   render() {
     const { handleSubmit, classes, match, initialValues } = this.props;
-    let fileNameOnDisk = "";
-    if (initialValues && initialValues.file) {
-      fileNameOnDisk = initialValues.file.fileName;
+    let fileType = null;
+    let mediaViewer = null;
+    if (initialValues) {
+      const { file } = initialValues;
+      const { fileName, originalName } = file;
+      const fileUrl = `http://localhost:8080/download?file=${fileName}`;
+      fileType = this.getFileTypeFromFileName(originalName);
+      mediaViewer = this.returnMediaViewer(fileType, fileUrl);
     }
     const mediaId = match.params.id;
-    const fileUrl = `http://localhost:8080/download?file=${fileNameOnDisk}`;
-    const player = mediaId ? (
-      <Player playsInline src={fileNameOnDisk ? fileUrl : ""} />
-    ) : null;
     const uploadButton = !mediaId ? (
       <Field name="file" component={FileInput} />
     ) : null;
@@ -170,7 +208,7 @@ class MediaForm extends Component {
 
         {uploadButton}
 
-        {player}
+        {mediaViewer}
 
         <div className={classes.buttonContainer}>
           <Button
