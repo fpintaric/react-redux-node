@@ -2,11 +2,14 @@ const PORT = 8080;
 const express = require("express");
 const bodyParser = require("body-parser");
 const logger = require("./config/logger.config");
+const jwt = require("./app/helpers/jwt.js");
+const errorHandler = require("./app/helpers/errorHandler.js");
 
 const app = express();
 
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(bodyParser.json({ limit: "50mb" }));
+app.use(jwt());
 
 const dbConfig = require("./config/database.config.js");
 const mongoose = require("mongoose");
@@ -54,6 +57,9 @@ app.get("/download", function(req, res) {
 
 require("./app/routes/location.routes.js")(app);
 require("./app/routes/media.routes.js")(app);
+require("./app/routes/user.routes.js")(app);
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   logger.log("info", `App started on port ${PORT}`);

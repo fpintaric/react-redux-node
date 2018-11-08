@@ -1,6 +1,8 @@
 const config = require("../../config/api.config.json");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const logger = require("../../config/logger.config");
+
 const User = require("../models/user.model");
 
 module.exports = {
@@ -13,8 +15,11 @@ module.exports = {
 };
 
 async function authenticate({ username, password }) {
+  logger.log("info", "UserService.authenticate()");
+  console.log(username);
+  console.log(password);
   const user = await User.findOne({ username });
-  if (user && bcrypt.compareSync(password, user.pasword)) {
+  if (user && bcrypt.compareSync(password, user.password)) {
     const { hash, ...userWithoutHash } = user.toObject();
     const token = jwt.sign({ sub: user.id }, config.secret);
     return {
@@ -33,6 +38,8 @@ async function getById(id) {
 }
 
 async function create(userParam) {
+  logger.log("info", "UserService.create()");
+  console.log(userParam);
   if (await User.findOne({ username: userParam.username })) {
     throw `Username ${userParam.username} is already taken`;
   }
