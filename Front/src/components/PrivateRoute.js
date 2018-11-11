@@ -15,7 +15,7 @@ const PrivateRoute = ({
     render={props =>
       authenticated ? (
         <Component title={title}>
-          <ChildComponent />
+          {ChildComponent ? <ChildComponent /> : null}
         </Component>
       ) : (
         <Redirect
@@ -31,7 +31,7 @@ const PrivateRoute = ({
 
 PrivateRoute.propTypes = {
   component: PropTypes.func.isRequired,
-  childComponent: PropTypes.func.isRequired,
+  childComponent: PropTypes.func,
   authenticated: PropTypes.bool.isRequired
 };
 

@@ -2,6 +2,7 @@ const PORT = 8080;
 const express = require("express");
 const bodyParser = require("body-parser");
 const logger = require("./config/logger.config");
+const cors = require("cors");
 const jwt = require("./app/helpers/jwt.js");
 const errorHandler = require("./app/helpers/errorHandler.js");
 
@@ -9,6 +10,7 @@ const app = express();
 
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(bodyParser.json({ limit: "50mb" }));
+app.use(cors());
 app.use(jwt());
 
 const dbConfig = require("./config/database.config.js");

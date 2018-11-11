@@ -12,6 +12,7 @@ import {
 
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
+import Login from "./Login";
 import ContentContainer from "./ContentContainer";
 import LocationsList from "./LocationsList";
 import MediaList from "./MediaList";
@@ -34,32 +35,35 @@ class App extends Component {
   render() {
     const { classes, authenticated } = this.props;
 
+    const MainContent = () => (
+      <div className={classes.root}>
+        <NavbarWithRouter />
+        <Sidebar />
+        <PrivateRoute
+          path="/locations"
+          authenticated={authenticated}
+          component={ContentContainer}
+          childComponent={LocationsList}
+        />
+        <PrivateRoute
+          path="/media"
+          authenticated={authenticated}
+          component={ContentContainer}
+          childComponent={MediaList}
+        />
+      </div>
+    );
+
     return (
       <CssBaseline>
         <Router>
           <div>
             <Switch>
-              <Route path="/login" component={Navbar} />
-              <Route
+              <Route path="/login" component={Login} />
+              <PrivateRoute
                 path="/"
-                render={props => (
-                  <div className={classes.root}>
-                    <NavbarWithRouter />
-                    <Sidebar />
-                    <PrivateRoute
-                      path="/locations"
-                      authenticated={authenticated}
-                      component={ContentContainer}
-                      childComponent={LocationsList}
-                    />
-                    <PrivateRoute
-                      path="/media"
-                      authenticated={authenticated}
-                      component={ContentContainer}
-                      childComponent={MediaList}
-                    />
-                  </div>
-                )}
+                authenticated={authenticated}
+                component={MainContent}
               />
             </Switch>
           </div>
