@@ -3,7 +3,12 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { BrowserRouter as Router, withRouter } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  withRouter,
+  Route,
+  Switch
+} from "react-router-dom";
 
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
@@ -27,26 +32,36 @@ const NavbarWithRouter = withRouter(Navbar);
 
 class App extends Component {
   render() {
-    const { classes } = this.props;
+    const { classes, authenticated } = this.props;
 
     return (
       <CssBaseline>
         <Router>
-          <div className={classes.root}>
-            <NavbarWithRouter />
-            <Sidebar />
-            <PrivateRoute
-              path="/locations"
-              authenticated={this.props.authenticated}
-              component={ContentContainer}
-              childComponent={LocationsList}
-            />
-            <PrivateRoute
-              path="/media"
-              authenticated={this.props.authenticated}
-              component={ContentContainer}
-              childComponent={MediaList}
-            />
+          <div>
+            <Switch>
+              <Route path="/login" component={Navbar} />
+              <Route
+                path="/"
+                render={props => (
+                  <div className={classes.root}>
+                    <NavbarWithRouter />
+                    <Sidebar />
+                    <PrivateRoute
+                      path="/locations"
+                      authenticated={authenticated}
+                      component={ContentContainer}
+                      childComponent={LocationsList}
+                    />
+                    <PrivateRoute
+                      path="/media"
+                      authenticated={authenticated}
+                      component={ContentContainer}
+                      childComponent={MediaList}
+                    />
+                  </div>
+                )}
+              />
+            </Switch>
           </div>
         </Router>
       </CssBaseline>

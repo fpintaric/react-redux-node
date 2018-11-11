@@ -1,6 +1,6 @@
 export default function() {
   return {
-    authenticated: true,
+    authenticated: false,
     user: null
   };
 }
