@@ -2,8 +2,8 @@ import axios from "axios";
 import { AUTHENTICATION_REQUEST } from "./constants";
 
 export function authenticationRequest(credentials) {
-  const request = axios.get(
-    `http://localhost:8080/users/authenticate/`,
+  const request = axios.post(
+    `http://localhost:8080/users/authenticate`,
     credentials
   );
 

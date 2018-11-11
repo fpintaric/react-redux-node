@@ -70,8 +70,8 @@ class Login extends Component {
           onSubmit={handleSubmit(this.onSubmit.bind(this))}
         >
           <Field
-            name="email"
-            label="E-Mail"
+            name="username"
+            label="Username"
             stylingClass={classes.textField}
             component={this.renderTextField}
             type="text"

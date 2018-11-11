@@ -7,7 +7,7 @@ function jwt() {
   logger.log("info", "JWT");
   const secret = config.secret;
   return expressJwt({ secret, isRevoked }).unless({
-    path: ["/users/authenticate/", "/users/register/"]
+    path: ["/users/authenticate", "/users/register/"]
   });
 }
 
