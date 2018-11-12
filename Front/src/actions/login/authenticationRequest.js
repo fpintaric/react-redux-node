@@ -5,6 +5,8 @@ import {
   AUTHENTICATION_FAIL
 } from "./constants";
 
+import { history } from "../../_helpers/history";
+
 export function authenticationRequest(credentials) {
   const request = axios.post(
     `http://localhost:8080/users/authenticate`,
@@ -20,6 +22,7 @@ export function authenticationRequest(credentials) {
             payload: data
           });
           localStorage.setItem("user", JSON.stringify(data));
+          history.push("/");
         } else {
           dispatch({
             type: AUTHENTICATION_FAIL,
@@ -32,6 +35,7 @@ export function authenticationRequest(credentials) {
           type: AUTHENTICATION_FAIL,
           payload: error
         });
+        history.push("/");
         console.log(error);
       });
   };

@@ -3,13 +3,8 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import {
-  BrowserRouter as Router,
-  withRouter,
-  Route,
-  Switch
-} from "react-router-dom";
-
+import { Router, withRouter, Route, Switch } from "react-router-dom";
+import { history } from "../_helpers/history";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import Login from "./Login";
@@ -56,7 +51,7 @@ class App extends Component {
 
     return (
       <CssBaseline>
-        <Router>
+        <Router history={history}>
           <div>
             <Switch>
               <Route path="/login" component={Login} />
