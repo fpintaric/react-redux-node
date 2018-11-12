@@ -1,11 +1,14 @@
 import axios from "axios";
 import { INSERT_MEDIA } from "./constants";
+import { authHeader } from "../../_helpers/authHeader";
 
 export function editMedia(values) {
-  console.log(values);
   const request = axios.put(
     `http://localhost:8080/media/${values._id}`,
-    values
+    values,
+    {
+      headers: authHeader()
+    }
   );
 
   return dispatch => {
