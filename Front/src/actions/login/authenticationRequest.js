@@ -1,5 +1,9 @@
 import axios from "axios";
-import { AUTHENTICATION_REQUEST } from "./constants";
+import {
+  AUTHENTICATION_REQUEST,
+  AUTHENTICATION_SUCCESS,
+  AUTHENTICATION_FAIL
+} from "./constants";
 
 export function authenticationRequest(credentials) {
   const request = axios.post(
@@ -10,11 +14,25 @@ export function authenticationRequest(credentials) {
   return dispatch => {
     request
       .then(({ data }) => {
-        dispatch({
-          type: AUTHENTICATION_REQUEST,
-          payload: data
-        });
+        if (data.token) {
+          dispatch({
+            type: AUTHENTICATION_SUCCESS,
+            payload: data
+          });
+          localStorage.setItem("user", JSON.stringify(data));
+        } else {
+          dispatch({
+            type: AUTHENTICATION_FAIL,
+            payload: data
+          });
+        }
       })
-      .catch(error => console.log(error.response));
+      .catch(error => {
+        dispatch({
+          type: AUTHENTICATION_FAIL,
+          payload: error
+        });
+        console.log(error);
+      });
   };
 }

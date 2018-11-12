@@ -1,14 +1,27 @@
-import { AUTHENTICATION_REQUEST } from "../actions/login/constants";
+import {
+  AUTHENTICATION_REQUEST,
+  AUTHENTICATION_FAIL,
+  AUTHENTICATION_SUCCESS
+} from "../actions/login/constants";
 
-export default (previosState = {}, action) => {
+let user = JSON.parse(localStorage.getItem("user"));
+const initialState = user ? { authenticated: true, user } : {};
+
+export default (previousState = initialState, action) => {
   switch (action.type) {
-    case AUTHENTICATION_REQUEST:
-      console.log(action.payload);
-      break;
-    default:
+    case AUTHENTICATION_SUCCESS:
       return {
+        ...previousState,
+        authenticated: true,
+        user: action.payload
+      };
+    case AUTHENTICATION_FAIL:
+      return {
+        ...previousState,
         authenticated: false,
         user: null
       };
+    default:
+      return previousState;
   }
 };
