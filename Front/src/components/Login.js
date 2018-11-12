@@ -98,6 +98,11 @@ class Login extends Component {
   }
 }
 
+Login.propTypes = {
+  classes: PropTypes.object.isRequired,
+  handleSubmit: PropTypes.func.isRequired
+};
+
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({ authenticationRequest }, dispatch);
 };

@@ -16,7 +16,7 @@ import { getAllMedia } from "../actions/media/getAllMedia";
 import { deleteMedia } from "../actions/media/deleteMedia";
 
 import SimpleModal from "./PopupDialog";
-import PrivateRoute from "./PrivateRoute";
+import ConditionalRoute from "./ConditionalRoute";
 
 import MediaForm from "./MediaForm";
 
@@ -83,7 +83,7 @@ class MediaList extends Component {
   };
 
   render() {
-    const { classes, media } = this.props;
+    const { classes, media, authenticated } = this.props;
     return true ? (
       <Table className={classes.table}>
         <TableHead>
@@ -94,16 +94,18 @@ class MediaList extends Component {
         </TableHead>
         <TableBody>{this.renderMedia(media)}</TableBody>
         <Switch>
-          <PrivateRoute
+          <ConditionalRoute
             path="/media/new"
-            authenticated={true}
+            condition={authenticated}
+            redirect="/login"
             component={SimpleModal}
             childComponent={MediaForm}
           />
-          <PrivateRoute
+          <ConditionalRoute
             path="/media/:id"
             title="Edit media"
-            authenticated={true}
+            condition={authenticated}
+            redirect="/login"
             component={SimpleModal}
             childComponent={MediaForm}
           />
@@ -121,7 +123,8 @@ MediaList.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    media: state.media.all
+    media: state.media.all,
+    authenticated: state.auth.authenticated
   };
 };
 

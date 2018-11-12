@@ -1,9 +1,5 @@
 import axios from "axios";
-import {
-  AUTHENTICATION_REQUEST,
-  AUTHENTICATION_SUCCESS,
-  AUTHENTICATION_FAIL
-} from "./constants";
+import { AUTHENTICATION_SUCCESS, AUTHENTICATION_FAIL } from "./constants";
 
 import { history } from "../../_helpers/history";
 

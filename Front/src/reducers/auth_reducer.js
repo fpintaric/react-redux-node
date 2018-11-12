@@ -1,11 +1,12 @@
 import {
-  AUTHENTICATION_REQUEST,
   AUTHENTICATION_FAIL,
   AUTHENTICATION_SUCCESS
 } from "../actions/login/constants";
 
 let user = JSON.parse(localStorage.getItem("user"));
-const initialState = user ? { authenticated: true, user } : {};
+const initialState = user
+  ? { authenticated: true, user }
+  : { authenticated: false };
 
 export default (previousState = initialState, action) => {
   switch (action.type) {

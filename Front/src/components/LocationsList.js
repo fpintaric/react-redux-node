@@ -13,7 +13,7 @@ import TableRow from "@material-ui/core/TableRow";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 import SimpleModal from "./PopupDialog";
-import PrivateRoute from "./PrivateRoute";
+import ConditionalRoute from "./ConditionalRoute";
 
 import { getLocations } from "../actions/locations/getLocations";
 import { deleteLocation } from "../actions/locations/deleteLocation";
@@ -93,7 +93,7 @@ class LocationsList extends Component {
   };
 
   render() {
-    const { classes, locations } = this.props;
+    const { classes, locations, authenticated } = this.props;
     return locations ? (
       <Table className={classes.table}>
         <TableHead>
@@ -105,18 +105,20 @@ class LocationsList extends Component {
         </TableHead>
         <TableBody>{this.renderLocations(locations, classes)}</TableBody>
         <Switch>
-          <PrivateRoute
+          <ConditionalRoute
             exact
             path="/locations/new"
             title="Create a new location"
-            authenticated={true}
+            condition={authenticated}
+            redirect="/login"
             component={SimpleModal}
             childComponent={LocationForm}
           />
-          <PrivateRoute
+          <ConditionalRoute
             path="/locations/:id"
             title="Edit location"
-            authenticated={true}
+            condition={authenticated}
+            redirect="/login"
             component={SimpleModal}
             childComponent={LocationForm}
           />
@@ -135,7 +137,8 @@ LocationsList.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    locations: state.locations.all
+    locations: state.locations.all,
+    authenticated: state.auth.authenticated
   };
 };
 

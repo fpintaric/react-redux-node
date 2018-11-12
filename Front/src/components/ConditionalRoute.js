@@ -2,25 +2,26 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Route, Redirect } from "react-router-dom";
 
-const PrivateRoute = ({
+const ConditionalRoute = ({
   component: Component,
   childComponent: ChildComponent,
   title,
-  authenticated,
+  condition,
+  redirect,
   exact,
   ...rest
 }) => (
   <Route
     {...rest}
     render={props =>
-      authenticated ? (
+      condition ? (
         <Component title={title}>
           {ChildComponent ? <ChildComponent /> : null}
         </Component>
       ) : (
         <Redirect
           to={{
-            pathname: "/login",
+            pathname: redirect,
             state: { from: props.location }
           }}
         />
@@ -29,10 +30,11 @@ const PrivateRoute = ({
   />
 );
 
-PrivateRoute.propTypes = {
+ConditionalRoute.propTypes = {
   component: PropTypes.func.isRequired,
   childComponent: PropTypes.func,
-  authenticated: PropTypes.bool.isRequired
+  condition: PropTypes.bool.isRequired,
+  redirect: PropTypes.string.isRequired
 };
 
-export default PrivateRoute;
+export default ConditionalRoute;

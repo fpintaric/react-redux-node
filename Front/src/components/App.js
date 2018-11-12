@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { Router, withRouter, Route, Switch } from "react-router-dom";
+import { Router, withRouter, Switch } from "react-router-dom";
 import { history } from "../_helpers/history";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
@@ -11,7 +11,7 @@ import Login from "./Login";
 import ContentContainer from "./ContentContainer";
 import LocationsList from "./LocationsList";
 import MediaList from "./MediaList";
-import PrivateRoute from "./PrivateRoute";
+import ConditionalRoute from "./ConditionalRoute";
 
 const styles = () => ({
   root: {
@@ -34,15 +34,17 @@ class App extends Component {
       <div className={classes.root}>
         <NavbarWithRouter />
         <Sidebar />
-        <PrivateRoute
+        <ConditionalRoute
           path="/locations"
-          authenticated={authenticated}
+          condition={authenticated}
+          redirect="/login"
           component={ContentContainer}
           childComponent={LocationsList}
         />
-        <PrivateRoute
+        <ConditionalRoute
           path="/media"
-          authenticated={authenticated}
+          condition={authenticated}
+          redirect="/login"
           component={ContentContainer}
           childComponent={MediaList}
         />
@@ -54,10 +56,16 @@ class App extends Component {
         <Router history={history}>
           <div>
             <Switch>
-              <Route path="/login" component={Login} />
-              <PrivateRoute
+              <ConditionalRoute
+                path="/login"
+                condition={!authenticated}
+                redirect="/"
+                component={Login}
+              />
+              <ConditionalRoute
                 path="/"
-                authenticated={authenticated}
+                condition={authenticated}
+                redirect="/login"
                 component={MainContent}
               />
             </Switch>
