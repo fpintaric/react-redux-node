@@ -7,7 +7,7 @@ import { Provider } from "react-redux";
 import { store } from "./store/index";
 import { createStore, applyMiddleware } from "redux";
 import reduxThunk from "redux-thunk";
-
+import { setupInterceptors } from "./_helpers/interceptors";
 import App from "./components/App";
 import * as serviceWorker from "./serviceWorker";
 
@@ -18,15 +18,15 @@ const theme = createMuiTheme({
 });
 
 const createStoreWithMiddleware = applyMiddleware(reduxThunk)(createStore);
+const finalStore = createStoreWithMiddleware(
+  store,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
+
+setupInterceptors(finalStore);
 
 ReactDOM.render(
-  <Provider
-    store={createStoreWithMiddleware(
-      store,
-      window.__REDUX_DEVTOOLS_EXTENSION__ &&
-        window.__REDUX_DEVTOOLS_EXTENSION__()
-    )}
-  >
+  <Provider store={finalStore}>
     <MuiThemeProvider theme={theme}>
       <App />
     </MuiThemeProvider>
