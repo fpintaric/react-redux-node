@@ -1,6 +1,7 @@
 import {
   AUTHENTICATION_FAIL,
-  AUTHENTICATION_SUCCESS
+  AUTHENTICATION_SUCCESS,
+  LOGOUT
 } from "../actions/login/constants";
 
 let user = JSON.parse(localStorage.getItem("user"));
@@ -17,6 +18,12 @@ export default (previousState = initialState, action) => {
         user: action.payload
       };
     case AUTHENTICATION_FAIL:
+      return {
+        ...previousState,
+        authenticated: false,
+        user: null
+      };
+    case LOGOUT:
       return {
         ...previousState,
         authenticated: false,
