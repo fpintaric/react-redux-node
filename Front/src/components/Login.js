@@ -41,19 +41,31 @@ const styles = theme => ({
   }
 });
 
-class Login extends Component {
-  renderTextField(field) {
-    return (
-      <TextField
-        label={field.label}
-        className={field.stylingClass}
-        margin="normal"
-        variant="outlined"
-        {...field.input}
-      />
-    );
-  }
+const renderTextField = field => {
+  return (
+    <TextField
+      label={field.label}
+      className={field.stylingClass}
+      margin="normal"
+      variant="outlined"
+      error={field.meta.touched === true && field.meta.error != null}
+      {...field.input}
+    />
+  );
+};
 
+const validate = values => {
+  const errors = {};
+  if (!values.username) {
+    errors.username = "Required";
+  }
+  if (!values.password) {
+    errors.password = "Required";
+  }
+  return errors;
+};
+
+class Login extends Component {
   onSubmit(values) {
     console.log("pls");
     this.props.authenticationRequest(values);
@@ -73,14 +85,14 @@ class Login extends Component {
             name="username"
             label="Username"
             stylingClass={classes.textField}
-            component={this.renderTextField}
+            component={renderTextField}
             type="text"
           />
           <Field
             name="password"
             label="Password"
             stylingClass={classes.textField}
-            component={this.renderTextField}
+            component={renderTextField}
             type="text"
           />
 
@@ -108,7 +120,8 @@ const mapDispatchToProps = dispatch => {
 };
 
 Login = reduxForm({
-  form: "login-form"
+  form: "login-form",
+  validate
 })(Login);
 
 export default connect(

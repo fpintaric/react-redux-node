@@ -51,7 +51,7 @@ const renderField = field => {
       label={field.label}
       helperText={field.helperText}
       placeholder={field.placeholder}
-      error={(field.meta.touched && field.meta.error) === "Required"}
+      error={field.meta.touched === true && field.meta.error != null}
       variant="standard"
       margin="normal"
       {...field.input}
