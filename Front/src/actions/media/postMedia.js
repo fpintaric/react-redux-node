@@ -1,13 +1,12 @@
 import axios from "axios";
 import { INSERT_MEDIA } from "./constants";
 import { authHeader } from "../../_helpers/authHeader";
-const authProperty = authHeader().Authorization;
 
 export function postMedia(values) {
   const config = {
     headers: {
       "Content-Type": "multipart/form-data",
-      Authorization: authProperty
+      Authorization: authHeader().Authorization
     },
     onUploadProgress: function(progressEvent) {
       let percentCompleted = Math.round(
