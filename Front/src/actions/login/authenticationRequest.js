@@ -32,7 +32,6 @@ export function authenticationRequest(credentials) {
           payload: error
         });
         history.push("/");
-        console.log(error);
       });
   };
 }

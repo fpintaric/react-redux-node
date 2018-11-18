@@ -1,4 +1,3 @@
-const config = require("../../config/api.config.json");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const logger = require("../../config/logger.config");
@@ -16,12 +15,10 @@ module.exports = {
 
 async function authenticate({ username, password }) {
   logger.log("info", "UserService.authenticate()");
-  console.log(username);
-  console.log(password);
   const user = await User.findOne({ username });
   if (user && bcrypt.compareSync(password, user.password)) {
     const { hash, ...userWithoutHash } = user.toObject();
-    const token = jwt.sign({ sub: user.id }, config.secret, {
+    const token = jwt.sign({ sub: user.id }, process.env.API_SECRET_KEY, {
       expiresIn: "24h"
     });
     return {

@@ -1,11 +1,10 @@
 const expressJwt = require("express-jwt");
-const config = require("../../config/api.config.json");
 const userService = require("../services/user.service.js");
 const logger = require("../../config/logger.config");
 
 function jwt() {
   logger.log("info", "JWT");
-  const secret = config.secret;
+  const secret = process.env.API_SECRET_KEY;
   return expressJwt({ secret, isRevoked }).unless({
     path: ["/users/authenticate", "/users/register/"]
   });

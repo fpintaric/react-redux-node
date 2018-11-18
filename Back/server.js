@@ -1,11 +1,11 @@
 const PORT = 8080;
+require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const logger = require("./config/logger.config");
 const cors = require("cors");
 const jwt = require("./app/helpers/jwt.js");
 const errorHandler = require("./app/helpers/errorHandler.js");
-
 const app = express();
 
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));

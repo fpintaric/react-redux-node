@@ -67,7 +67,6 @@ const validate = values => {
 
 class Login extends Component {
   onSubmit(values) {
-    console.log("pls");
     this.props.authenticationRequest(values);
   }
 
