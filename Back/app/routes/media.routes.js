@@ -13,4 +13,6 @@ module.exports = app => {
   app.put("/media/:mediaId", media.update);
 
   app.delete("/media/:mediaId", media.delete);
+
+  app.get("/download/", media.download);
 };

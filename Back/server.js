@@ -50,13 +50,6 @@ app.get("/", (req, res) => {
   res.json({ message: "You hit the root route!" });
 });
 
-app.get("/download", function(req, res) {
-  logger.log("info", `getting media, requested file: ${req.query.file}`);
-  const requestedFile = req.query.file;
-  var file = __dirname + `/uploads/${requestedFile}`;
-  res.download(file); // Set disposition and send it.
-});
-
 require("./app/routes/location.routes.js")(app);
 require("./app/routes/media.routes.js")(app);
 require("./app/routes/user.routes.js")(app);

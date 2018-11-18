@@ -175,3 +175,10 @@ exports.delete = (req, res) => {
       });
     });
 };
+
+exports.download = (req, res) => {
+  logger.log("info", `getting media, requested file: ${req.query.file}`);
+  const requestedFile = req.query.file;
+  var file = __dirname + `/uploads/${requestedFile}`;
+  res.download(file); // Set disposition and send it.
+};
