@@ -135,10 +135,11 @@ class MediaForm extends Component {
     const filenameArraySplitByDot = filename.split(".");
     const extension =
       filenameArraySplitByDot[filenameArraySplitByDot.length - 1];
-    switch (extension) {
+    switch (extension.toLowerCase()) {
       case "mp4":
         return "VID";
       case "jpg":
+      case "png":
         return "PIC";
       default:
         return null;
