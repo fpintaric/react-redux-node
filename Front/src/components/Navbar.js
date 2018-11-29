@@ -49,8 +49,9 @@ class MenuAppBar extends React.Component {
   }
 
   render() {
-    const currentPath = this.props.location.pathname.replace("/", "");
-    const { classes } = this.props;
+    const { classes, location } = this.props;
+    const currentPath = location.pathname.replace("/", "");
+    const buttonText = currentPath.split("/")[0];
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
 
@@ -69,7 +70,7 @@ class MenuAppBar extends React.Component {
             color="inherit"
             onClick={() => this.addNewLocation(currentPath)}
           >
-            {"Add " + currentPath}
+            {"Add " + buttonText}
           </Button>
           <IconButton
             aria-owns={open ? "menu-appbar" : undefined}
