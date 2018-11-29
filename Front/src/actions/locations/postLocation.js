@@ -1,5 +1,5 @@
 import axios from "axios";
-import { INSERT_LOCATION } from "./constants";
+import { insertLocation } from "./insertLocation";
 import { authHeader } from "../../_helpers/authHeader";
 
 export function postLocation(values) {
@@ -10,10 +10,7 @@ export function postLocation(values) {
   return dispatch => {
     request
       .then(response => {
-        dispatch({
-          type: INSERT_LOCATION,
-          payload: response.data
-        });
+        dispatch(insertLocation(response.data));
       })
       .catch(error => console.log(error));
   };

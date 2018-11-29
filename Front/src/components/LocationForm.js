@@ -12,6 +12,7 @@ import { postLocation } from "../actions/locations/postLocation";
 import { editLocation } from "../actions/locations/editLocation";
 import { getLocation } from "../actions/locations/getLocation";
 import { emptyActiveLocation } from "../actions/locations/emptyActiveLocation";
+import { openSnackbar } from "../actions/ui/openSnackbar";
 import { withRouter } from "react-router-dom";
 
 const styles = theme => ({
@@ -68,6 +69,7 @@ class LocationForm extends Component {
   onSubmit(values) {
     this.props.postLocation(values);
     this.hideModalUrl();
+    this.props.openSnackbar("Location added");
   }
 
   onEdit(values) {
@@ -144,7 +146,14 @@ LocationForm.propTypes = {
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
-    { hideModal, postLocation, editLocation, getLocation, emptyActiveLocation },
+    {
+      hideModal,
+      postLocation,
+      editLocation,
+      getLocation,
+      emptyActiveLocation,
+      openSnackbar
+    },
     dispatch
   );
 };
