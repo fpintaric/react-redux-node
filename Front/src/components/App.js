@@ -8,6 +8,7 @@ import { history } from "../_helpers/history";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import Login from "./Login";
+import Registration from "./Registration";
 import ContentContainer from "./ContentContainer";
 import LocationsList from "./LocationsList";
 import MediaList from "./MediaList";
@@ -61,6 +62,12 @@ class App extends Component {
                 condition={!authenticated}
                 redirect="/"
                 component={Login}
+              />
+              <ConditionalRoute
+                path="/register"
+                condition={!authenticated}
+                redirect="/"
+                component={Registration}
               />
               <ConditionalRoute
                 path="/"

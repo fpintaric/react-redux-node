@@ -67,7 +67,7 @@ const validate = values => {
   return errors;
 };
 
-class Login extends Component {
+class Registration extends Component {
   onSubmit(values) {
     this.props.authenticationRequest(values);
   }
@@ -77,7 +77,7 @@ class Login extends Component {
 
     return (
       <div className={classes.loginRootDiv}>
-        <p className={classes.title}>Login</p>
+        <p className={classes.title}>Registration</p>
         <form
           className={classes.form}
           onSubmit={handleSubmit(this.onSubmit.bind(this))}
@@ -85,6 +85,13 @@ class Login extends Component {
           <Field
             name="username"
             label="Username"
+            stylingClass={classes.textField}
+            component={renderTextField}
+            type="text"
+          />
+          <Field
+            name="email"
+            label="E-Mail"
             stylingClass={classes.textField}
             component={renderTextField}
             type="text"
@@ -103,25 +110,25 @@ class Login extends Component {
             color="primary"
             className={classes.button}
           >
-            Login
+            Register
           </Button>
         </form>
         <Button
           component={Link}
-          to="/register"
+          to="/login"
           type="button"
           variant="contained"
           color="default"
           className={classes.button}
         >
-          Register
+          Login
         </Button>
       </div>
     );
   }
 }
 
-Login.propTypes = {
+Registration.propTypes = {
   classes: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired
 };
@@ -130,12 +137,12 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators({ authenticationRequest }, dispatch);
 };
 
-Login = reduxForm({
+Registration = reduxForm({
   form: "login-form",
   validate
-})(Login);
+})(Registration);
 
 export default connect(
   null,
   mapDispatchToProps
-)(withStyles(styles)(Login));
+)(withStyles(styles)(Registration));
