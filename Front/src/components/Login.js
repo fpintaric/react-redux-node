@@ -50,6 +50,7 @@ const renderTextField = field => {
       type={field.type}
       margin="normal"
       variant="outlined"
+      autoComplete={field.autoComplete}
       error={field.meta.touched === true && field.meta.error != null}
       {...field.input}
     />
@@ -87,6 +88,7 @@ class Login extends Component {
             label="Username"
             stylingClass={classes.textField}
             component={renderTextField}
+            autoComplete="username"
             type="text"
           />
           <Field
@@ -94,6 +96,7 @@ class Login extends Component {
             label="Password"
             stylingClass={classes.textField}
             component={renderTextField}
+            autoComplete="current-password"
             type="password"
           />
 

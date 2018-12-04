@@ -8,7 +8,7 @@ import { reduxForm } from "redux-form";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import { authenticationRequest } from "../actions/login/authenticationRequest";
+import { registrationRequest } from "../actions/registration/registrationRequest";
 
 const styles = theme => ({
   loginRootDiv: {
@@ -63,6 +63,9 @@ const validate = values => {
   }
   if (!values.password) {
     errors.password = "Required";
+  }
+  if (!values.email) {
+    errors.email = "Required";
   }
   return errors;
 };
@@ -134,7 +137,7 @@ Registration.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ authenticationRequest }, dispatch);
+  return bindActionCreators({ registrationRequest }, dispatch);
 };
 
 Registration = reduxForm({
