@@ -46,6 +46,7 @@ const renderTextField = field => {
     <TextField
       label={field.label}
       className={field.stylingClass}
+      type={field.type}
       margin="normal"
       variant="outlined"
       error={field.meta.touched === true && field.meta.error != null}
@@ -92,7 +93,7 @@ class Login extends Component {
             label="Password"
             stylingClass={classes.textField}
             component={renderTextField}
-            type="text"
+            type="password"
           />
 
           <Button
