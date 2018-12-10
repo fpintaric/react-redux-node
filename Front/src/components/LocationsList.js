@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { bindActionCreators } from "redux";
 import { withStyles } from "@material-ui/core/styles";
@@ -54,27 +54,22 @@ const LocationItem = ({
   </TableRow>
 );
 
-class LocationsList extends Component {
-  constructor(props) {
-    super(props);
-    this.deleteLocationHandler = this.deleteLocationHandler.bind(this);
-    this.editLocationHandler = this.editLocationHandler.bind(this);
-  }
+function LocationsList(props) {
+  const { classes, locations, authenticated } = props;
+  useEffect(() => {
+    props.getLocations();
+  }, []);
 
-  componentDidMount = () => {
-    this.props.getLocations();
+  const deleteLocationHandler = locationId => {
+    props.deleteLocation(locationId);
   };
 
-  deleteLocationHandler = locationId => {
-    this.props.deleteLocation(locationId);
+  const editLocationHandler = locationId => {
+    const currentPath = props.location.pathname.replace("/", "");
+    props.history.push(`${currentPath}/${locationId}`);
   };
 
-  editLocationHandler = locationId => {
-    const currentPath = this.props.location.pathname.replace("/", "");
-    this.props.history.push(`${currentPath}/${locationId}`);
-  };
-
-  renderLocations = locations => {
+  const renderLocations = locations => {
     let rows = [];
     for (let key in locations) {
       let location = locations[key];
@@ -84,50 +79,46 @@ class LocationsList extends Component {
           id={location._id}
           city={location.city}
           address={location.address}
-          deleteHandler={this.deleteLocationHandler}
-          editLocationHandler={this.editLocationHandler}
+          deleteHandler={deleteLocationHandler}
+          editLocationHandler={editLocationHandler}
         />
       );
     }
     return rows;
   };
-
-  render() {
-    const { classes, locations, authenticated } = this.props;
-    return locations ? (
-      <Table className={classes.table}>
-        <TableHead>
-          <TableRow>
-            <TableCell>City</TableCell>
-            <TableCell>Address</TableCell>
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>{this.renderLocations(locations, classes)}</TableBody>
-        <Switch>
-          <ConditionalRoute
-            exact
-            path="/locations/new"
-            title="Create a new location"
-            condition={authenticated}
-            redirect="/login"
-            component={SimpleModal}
-            childComponent={LocationForm}
-          />
-          <ConditionalRoute
-            path="/locations/:id"
-            title="Edit location"
-            condition={authenticated}
-            redirect="/login"
-            component={SimpleModal}
-            childComponent={LocationForm}
-          />
-        </Switch>
-      </Table>
-    ) : (
-      <div>Loading...</div>
-    );
-  }
+  return locations ? (
+    <Table className={classes.table}>
+      <TableHead>
+        <TableRow>
+          <TableCell>City</TableCell>
+          <TableCell>Address</TableCell>
+          <TableCell />
+        </TableRow>
+      </TableHead>
+      <TableBody>{renderLocations(locations, classes)}</TableBody>
+      <Switch>
+        <ConditionalRoute
+          exact
+          path="/locations/new"
+          title="Create a new location"
+          condition={authenticated}
+          redirect="/login"
+          component={SimpleModal}
+          childComponent={LocationForm}
+        />
+        <ConditionalRoute
+          path="/locations/:id"
+          title="Edit location"
+          condition={authenticated}
+          redirect="/login"
+          component={SimpleModal}
+          childComponent={LocationForm}
+        />
+      </Switch>
+    </Table>
+  ) : (
+    <div>Loading...</div>
+  );
 }
 
 LocationsList.propTypes = {

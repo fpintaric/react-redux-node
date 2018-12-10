@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { reduxForm } from "redux-form";
@@ -60,79 +60,69 @@ const renderField = field => {
   );
 };
 
-class LocationForm extends Component {
-  constructor(props) {
-    super(props);
-    this.hideModalUrl = this.hideModalUrl.bind(this);
-  }
-
-  onSubmit(values) {
-    this.props.postLocation(values);
-    this.hideModalUrl();
-    this.props.openSnackbar("Location added");
-  }
-
-  onEdit(values) {
-    this.props.editLocation(values);
-    this.hideModalUrl();
-  }
-
-  hideModalUrl() {
-    this.props.emptyActiveLocation();
-    this.props.history.push("/locations");
-  }
-
-  componentDidMount = () => {
-    const { match } = this.props;
+function LocationForm(props) {
+  const { handleSubmit, classes, initialValues } = props;
+  useEffect(() => {
+    const { match } = props;
     const locationId = match.params.id;
     if (locationId) {
-      this.props.getLocation(locationId);
+      props.getLocation(locationId);
     }
+  });
+
+  const onSubmit = values => {
+    props.postLocation(values);
+    hideModalUrl();
+    props.openSnackbar("Location added");
   };
 
-  render() {
-    const { handleSubmit, classes, initialValues } = this.props;
-    return (
-      <form
-        className={classes.container}
-        onSubmit={handleSubmit(
-          !initialValues ? this.onSubmit.bind(this) : this.onEdit.bind(this)
-        )}
-      >
-        <Field
-          name="city"
-          label="City"
-          helperText="City the store is in"
-          placeholder="New York"
-          stylingClass={classes.textField}
-          component={renderField}
-          type="text"
-        />
-        <Field
-          name="address"
-          label="Address"
-          helperText="Address of the store"
-          placeholder="Broadway Boulevard 12a"
-          stylingClass={classes.textField}
-          component={renderField}
-          type="text"
-        />
-        <div className={classes.buttonContainer}>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            className={classes.button}
-          >
-            {!initialValues ? "Create Location" : "Edit location"}
-          </Button>
-          <Button onClick={this.hideModalUrl} className={classes.button}>
-            Cancel
-          </Button>
-        </div>
-      </form>
-    );
-  }
+  const onEdit = values => {
+    props.editLocation(values);
+    hideModalUrl();
+  };
+
+  const hideModalUrl = () => {
+    props.emptyActiveLocation();
+    props.history.push("/locations");
+  };
+  return (
+    <form
+      className={classes.container}
+      onSubmit={handleSubmit(!initialValues ? onSubmit : onEdit)}
+    >
+      <Field
+        name="city"
+        label="City"
+        helperText="City the store is in"
+        placeholder="New York"
+        stylingClass={classes.textField}
+        component={renderField}
+        type="text"
+      />
+      <Field
+        name="address"
+        label="Address"
+        helperText="Address of the store"
+        placeholder="Broadway Boulevard 12a"
+        stylingClass={classes.textField}
+        component={renderField}
+        type="text"
+      />
+      <div className={classes.buttonContainer}>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          className={classes.button}
+        >
+          {!initialValues ? "Create Location" : "Edit location"}
+        </Button>
+        <Button onClick={hideModalUrl} className={classes.button}>
+          Cancel
+        </Button>
+      </div>
+    </form>
+  );
 }
 
 LocationForm = reduxForm({

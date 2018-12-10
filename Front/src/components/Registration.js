@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { bindActionCreators } from "redux";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -70,65 +70,60 @@ const validate = values => {
   return errors;
 };
 
-class Registration extends Component {
-  onSubmit(values) {
-    this.props.authenticationRequest(values);
-  }
+function Registration(props) {
+  const onSubmit = values => {
+    props.authenticationRequest(values);
+  };
 
-  render() {
-    const { classes, handleSubmit } = this.props;
+  const { classes, handleSubmit } = props;
 
-    return (
-      <div className={classes.loginRootDiv}>
-        <p className={classes.title}>Registration</p>
-        <form
-          className={classes.form}
-          onSubmit={handleSubmit(this.onSubmit.bind(this))}
-        >
-          <Field
-            name="username"
-            label="Username"
-            stylingClass={classes.textField}
-            component={renderTextField}
-            type="text"
-          />
-          <Field
-            name="email"
-            label="E-Mail"
-            stylingClass={classes.textField}
-            component={renderTextField}
-            type="text"
-          />
-          <Field
-            name="password"
-            label="Password"
-            stylingClass={classes.textField}
-            component={renderTextField}
-            type="password"
-          />
+  return (
+    <div className={classes.loginRootDiv}>
+      <p className={classes.title}>Registration</p>
+      <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
+        <Field
+          name="username"
+          label="Username"
+          stylingClass={classes.textField}
+          component={renderTextField}
+          type="text"
+        />
+        <Field
+          name="email"
+          label="E-Mail"
+          stylingClass={classes.textField}
+          component={renderTextField}
+          type="text"
+        />
+        <Field
+          name="password"
+          label="Password"
+          stylingClass={classes.textField}
+          component={renderTextField}
+          type="password"
+        />
 
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            className={classes.button}
-          >
-            Register
-          </Button>
-        </form>
         <Button
-          component={Link}
-          to="/login"
-          type="button"
+          type="submit"
           variant="contained"
-          color="default"
+          color="primary"
           className={classes.button}
         >
-          Login
+          Register
         </Button>
-      </div>
-    );
-  }
+      </form>
+      <Button
+        component={Link}
+        to="/login"
+        type="button"
+        variant="contained"
+        color="default"
+        className={classes.button}
+      >
+        Login
+      </Button>
+    </div>
+  );
 }
 
 Registration.propTypes = {

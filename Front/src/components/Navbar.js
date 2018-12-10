@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { bindActionCreators } from "redux";
@@ -23,79 +23,62 @@ const styles = theme => ({
   }
 });
 
-class MenuAppBar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.addNewLocation = this.addNewLocation.bind(this);
-    this.state = {
-      anchorEl: null
-    };
-  }
+function MenuAppBar(props) {
+  const [anchorEl, setAnchorEl] = useState(null);
 
-  handleChange = event => {
-    this.setState({ auth: event.target.checked });
+  const handleMenu = event => {
+    setAnchorEl({ anchorEl: event.currentTarget });
   };
 
-  handleMenu = event => {
-    this.setState({ anchorEl: event.currentTarget });
+  const handleClose = () => {
+    setAnchorEl({ anchorEl: null });
   };
 
-  handleClose = () => {
-    this.setState({ anchorEl: null });
+  const addNewLocation = currentPath => {
+    props.history.push(`${currentPath}/new`);
   };
+  const { classes, location } = props;
+  const currentPath = location.pathname.replace("/", "");
+  const buttonText = currentPath.split("/")[0];
+  const open = Boolean(anchorEl);
 
-  addNewLocation(currentPath) {
-    this.props.history.push(`${currentPath}/new`);
-  }
-
-  render() {
-    const { classes, location } = this.props;
-    const currentPath = location.pathname.replace("/", "");
-    const buttonText = currentPath.split("/")[0];
-    const { anchorEl } = this.state;
-    const open = Boolean(anchorEl);
-
-    return (
-      <AppBar position="absolute" className={classes.appBar}>
-        <Toolbar>
-          <Typography
-            className={classes.grow}
-            variant="h6"
-            color="inherit"
-            noWrap
-          >
-            React/Redux/Node
-          </Typography>
-          <Button
-            color="inherit"
-            onClick={() => this.addNewLocation(currentPath)}
-          >
-            {"Add " + buttonText}
-          </Button>
-          <IconButton
-            aria-owns={open ? "menu-appbar" : undefined}
-            aria-haspopup="true"
-            onClick={this.handleMenu}
-            color="inherit"
-          >
-            <AccountCircle />
-          </IconButton>
-          <Menu
-            id="menu-appbar"
-            anchorEl={anchorEl}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right"
-            }}
-            open={open}
-            onClose={this.handleClose}
-          >
-            <MenuItem onClick={this.props.logout}>Logout</MenuItem>
-          </Menu>
-        </Toolbar>
-      </AppBar>
-    );
-  }
+  return (
+    <AppBar position="absolute" className={classes.appBar}>
+      <Toolbar>
+        <Typography
+          className={classes.grow}
+          variant="h6"
+          color="inherit"
+          noWrap
+        >
+          React/Redux/Node
+        </Typography>
+        <Button color="inherit" onClick={() => addNewLocation(currentPath)}>
+          {"Add " + buttonText}
+        </Button>
+        <IconButton
+          aria-owns={open ? "menu-appbar" : undefined}
+          aria-haspopup="true"
+          onClick={handleMenu}
+          color="inherit"
+        >
+          <AccountCircle />
+        </IconButton>
+        <Menu
+          id="menu-appbar"
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right"
+          }}
+          open={open}
+          onClose={handleClose}
+        >
+          <MenuItem onClick={props.logout}>Logout</MenuItem>
+        </Menu>
+      </Toolbar>
+    </AppBar>
+  );
 }
 
 MenuAppBar.propTypes = {

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { bindActionCreators } from "redux";
@@ -21,33 +21,24 @@ const styles = theme => ({
   }
 });
 
-class SimpleModal extends Component {
-  constructor(props) {
-    super(props);
-    this.hideModal = this.hideModal.bind(this);
-  }
+function SimpleModal(props) {
+  const { classes, title } = props;
 
-  hideModal() {
-    return false;
-  }
+  const onClose = () => false;
 
-  render() {
-    const { classes, title } = this.props;
-
-    return (
-      <Modal
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-        open
-        onClose={this.hideModal}
-      >
-        <div className={classes.paper}>
-          <Typography>{title}</Typography>
-          {this.props.children}
-        </div>
-      </Modal>
-    );
-  }
+  return (
+    <Modal
+      aria-labelledby="simple-modal-title"
+      aria-describedby="simple-modal-description"
+      open
+      onClose={onClose}
+    >
+      <div className={classes.paper}>
+        <Typography>{title}</Typography>
+        {props.children}
+      </div>
+    </Modal>
+  );
 }
 
 SimpleModal.propTypes = {

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
@@ -27,60 +27,57 @@ const styles = () => ({
 
 const NavbarWithRouter = withRouter(Navbar);
 
-class App extends Component {
-  render() {
-    const { classes, authenticated } = this.props;
+function App(props) {
+  const { classes, authenticated } = props;
+  const MainContent = () => (
+    <div className={classes.root}>
+      <NavbarWithRouter />
+      <Sidebar />
+      <ConditionalRoute
+        path="/locations"
+        condition={authenticated}
+        redirect="/login"
+        component={ContentContainer}
+        childComponent={LocationsList}
+      />
+      <ConditionalRoute
+        path="/media"
+        condition={authenticated}
+        redirect="/login"
+        component={ContentContainer}
+        childComponent={MediaList}
+      />
+    </div>
+  );
 
-    const MainContent = () => (
-      <div className={classes.root}>
-        <NavbarWithRouter />
-        <Sidebar />
-        <ConditionalRoute
-          path="/locations"
-          condition={authenticated}
-          redirect="/login"
-          component={ContentContainer}
-          childComponent={LocationsList}
-        />
-        <ConditionalRoute
-          path="/media"
-          condition={authenticated}
-          redirect="/login"
-          component={ContentContainer}
-          childComponent={MediaList}
-        />
-      </div>
-    );
-
-    return (
-      <CssBaseline>
-        <Router history={history}>
-          <div>
-            <Switch>
-              <ConditionalRoute
-                path="/login"
-                condition={!authenticated}
-                redirect="/"
-                component={Login}
-              />
-              <ConditionalRoute
-                path="/register"
-                condition={!authenticated}
-                redirect="/"
-                component={Registration}
-              />
-              <ConditionalRoute
-                path="/"
-                condition={authenticated}
-                redirect="/login"
-                component={MainContent}
-              />
-            </Switch>
-          </div>
-        </Router>
-      </CssBaseline>
-    );
-  }
+  return (
+    <CssBaseline>
+      <Router history={history}>
+        <div>
+          <Switch>
+            <ConditionalRoute
+              path="/login"
+              condition={!authenticated}
+              redirect="/"
+              component={Login}
+            />
+            <ConditionalRoute
+              path="/register"
+              condition={!authenticated}
+              redirect="/"
+              component={Registration}
+            />
+            <ConditionalRoute
+              path="/"
+              condition={authenticated}
+              redirect="/login"
+              component={MainContent}
+            />
+          </Switch>
+        </div>
+      </Router>
+    </CssBaseline>
+  );
 }
 
 App.propTypes = {

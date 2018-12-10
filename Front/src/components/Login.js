@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { bindActionCreators } from "redux";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -68,60 +68,54 @@ const validate = values => {
   return errors;
 };
 
-class Login extends Component {
-  onSubmit(values) {
-    this.props.authenticationRequest(values);
-  }
+function Login(props) {
+  const onSubmit = values => {
+    props.authenticationRequest(values);
+  };
+  const { classes, handleSubmit } = props;
 
-  render() {
-    const { classes, handleSubmit } = this.props;
+  return (
+    <div className={classes.loginRootDiv}>
+      <p className={classes.title}>Login</p>
+      <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
+        <Field
+          name="username"
+          label="Username"
+          stylingClass={classes.textField}
+          component={renderTextField}
+          autoComplete="username"
+          type="text"
+        />
+        <Field
+          name="password"
+          label="Password"
+          stylingClass={classes.textField}
+          component={renderTextField}
+          autoComplete="current-password"
+          type="password"
+        />
 
-    return (
-      <div className={classes.loginRootDiv}>
-        <p className={classes.title}>Login</p>
-        <form
-          className={classes.form}
-          onSubmit={handleSubmit(this.onSubmit.bind(this))}
-        >
-          <Field
-            name="username"
-            label="Username"
-            stylingClass={classes.textField}
-            component={renderTextField}
-            autoComplete="username"
-            type="text"
-          />
-          <Field
-            name="password"
-            label="Password"
-            stylingClass={classes.textField}
-            component={renderTextField}
-            autoComplete="current-password"
-            type="password"
-          />
-
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            className={classes.button}
-          >
-            Login
-          </Button>
-        </form>
         <Button
-          component={Link}
-          to="/register"
-          type="button"
+          type="submit"
           variant="contained"
-          color="default"
+          color="primary"
           className={classes.button}
         >
-          Register
+          Login
         </Button>
-      </div>
-    );
-  }
+      </form>
+      <Button
+        component={Link}
+        to="/register"
+        type="button"
+        variant="contained"
+        color="default"
+        className={classes.button}
+      >
+        Register
+      </Button>
+    </div>
+  );
 }
 
 Login.propTypes = {

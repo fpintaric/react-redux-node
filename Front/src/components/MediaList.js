@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { bindActionCreators } from "redux";
 import { withStyles } from "@material-ui/core/styles";
@@ -45,27 +45,21 @@ const MediaItem = ({ id, title, deleteHandler, editMediaHandler }) => (
   </TableRow>
 );
 
-class MediaList extends Component {
-  constructor(props) {
-    super(props);
-    this.deleteMediaHandler = this.deleteMediaHandler.bind(this);
-    this.editMediaHandler = this.editMediaHandler.bind(this);
-  }
+function MediaList(props) {
+  useEffect(() => {
+    props.getAllMedia();
+  }, []);
 
-  componentDidMount = () => {
-    this.props.getAllMedia();
+  const deleteMediaHandler = mediaId => {
+    props.deleteMedia(mediaId);
   };
 
-  deleteMediaHandler = mediaId => {
-    this.props.deleteMedia(mediaId);
+  const editMediaHandler = mediaId => {
+    const currentPath = props.location.pathname.replace("/", "");
+    props.history.push(`${currentPath}/${mediaId}`);
   };
 
-  editMediaHandler = mediaId => {
-    const currentPath = this.props.location.pathname.replace("/", "");
-    this.props.history.push(`${currentPath}/${mediaId}`);
-  };
-
-  renderMedia = medias => {
+  const renderMedia = medias => {
     let rows = [];
     for (let key in medias) {
       let media = medias[key];
@@ -74,47 +68,45 @@ class MediaList extends Component {
           key={media._id}
           id={media._id}
           title={media.title}
-          deleteHandler={this.deleteMediaHandler}
-          editMediaHandler={this.editMediaHandler}
+          deleteHandler={deleteMediaHandler}
+          editMediaHandler={editMediaHandler}
         />
       );
     }
     return rows;
   };
 
-  render() {
-    const { classes, media, authenticated } = this.props;
-    return true ? (
-      <Table className={classes.table}>
-        <TableHead>
-          <TableRow>
-            <TableCell>Title</TableCell>
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>{this.renderMedia(media)}</TableBody>
-        <Switch>
-          <ConditionalRoute
-            path="/media/new"
-            condition={authenticated}
-            redirect="/login"
-            component={SimpleModal}
-            childComponent={MediaForm}
-          />
-          <ConditionalRoute
-            path="/media/:id"
-            title="Edit media"
-            condition={authenticated}
-            redirect="/login"
-            component={SimpleModal}
-            childComponent={MediaForm}
-          />
-        </Switch>
-      </Table>
-    ) : (
-      <div>Loading...</div>
-    );
-  }
+  const { classes, media, authenticated } = props;
+  return true ? (
+    <Table className={classes.table}>
+      <TableHead>
+        <TableRow>
+          <TableCell>Title</TableCell>
+          <TableCell />
+        </TableRow>
+      </TableHead>
+      <TableBody>{renderMedia(media)}</TableBody>
+      <Switch>
+        <ConditionalRoute
+          path="/media/new"
+          condition={authenticated}
+          redirect="/login"
+          component={SimpleModal}
+          childComponent={MediaForm}
+        />
+        <ConditionalRoute
+          path="/media/:id"
+          title="Edit media"
+          condition={authenticated}
+          redirect="/login"
+          component={SimpleModal}
+          childComponent={MediaForm}
+        />
+      </Switch>
+    </Table>
+  ) : (
+    <div>Loading...</div>
+  );
 }
 
 MediaList.propTypes = {

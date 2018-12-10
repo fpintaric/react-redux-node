@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { reduxForm } from "redux-form";
@@ -92,13 +92,8 @@ const styles = theme => ({
   }
 });
 
-class MediaForm extends Component {
-  constructor(props) {
-    super(props);
-    this.hideModalUrl = this.hideModalUrl.bind(this);
-  }
-
-  renderTextField(field) {
+function MediaForm(props) {
+  const renderTextField = field => {
     return (
       <TextField
         className={field.stylingClass}
@@ -110,28 +105,28 @@ class MediaForm extends Component {
         {...field.input}
       />
     );
-  }
+  };
 
-  onSubmit(values) {
+  const onSubmit = values => {
     let formData = new FormData();
     formData.append("file", values.file);
     formData.append("title", values.title);
 
-    this.props.postMedia(formData);
-    this.hideModalUrl();
-  }
+    props.postMedia(formData);
+    hideModalUrl();
+  };
 
-  onEdit(values) {
-    this.props.editMedia(values);
-    this.hideModalUrl();
-  }
+  const onEdit = values => {
+    props.editMedia(values);
+    hideModalUrl();
+  };
 
-  hideModalUrl() {
-    this.props.emptyActiveMedia();
-    this.props.history.push("/media");
-  }
+  const hideModalUrl = () => {
+    props.emptyActiveMedia();
+    props.history.push("/media");
+  };
 
-  getFileTypeFromFileName(filename) {
+  const getFileTypeFromFileName = filename => {
     const filenameArraySplitByDot = filename.split(".");
     const extension =
       filenameArraySplitByDot[filenameArraySplitByDot.length - 1];
@@ -144,9 +139,9 @@ class MediaForm extends Component {
       default:
         return null;
     }
-  }
+  };
 
-  returnMediaViewer(fileType, fileUrl) {
+  const returnMediaViewer = (fileType, fileUrl) => {
     switch (fileType) {
       case "VID":
         return <Player playsInline src={fileUrl} />;
@@ -164,69 +159,65 @@ class MediaForm extends Component {
       default:
         return null;
     }
-  }
-
-  componentDidMount = () => {
-    const { match } = this.props;
-    const mediaId = match.params.id;
-    if (mediaId) {
-      this.props.getSingleMedia(mediaId);
-    }
   };
 
-  render() {
-    const { handleSubmit, classes, match, initialValues } = this.props;
-    let fileType = null;
-    let mediaViewer = null;
-    if (initialValues) {
-      const { file } = initialValues;
-      const { fileName, originalName } = file;
-      const fileUrl = `http://localhost:8080/download?file=${fileName}`;
-      fileType = this.getFileTypeFromFileName(originalName);
-      mediaViewer = this.returnMediaViewer(fileType, fileUrl);
-    }
+  useEffect(() => {
+    const { match } = props;
     const mediaId = match.params.id;
-    const uploadButton = !mediaId ? (
-      <Field name="file" component={FileInput} />
-    ) : null;
+    if (mediaId) {
+      props.getSingleMedia(mediaId);
+    }
+  });
 
-    return (
-      <form
-        className={classes.container}
-        onSubmit={handleSubmit(
-          !initialValues ? this.onSubmit.bind(this) : this.onEdit.bind(this)
-        )}
-      >
-        <Field
-          name="title"
-          label="Media Name"
-          helperText="Media name"
-          placeholder="Video 1"
-          stylingClass={classes.textField}
-          component={this.renderTextField}
-          type="text"
-        />
-
-        {uploadButton}
-
-        {mediaViewer}
-
-        <div className={classes.buttonContainer}>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            className={classes.button}
-          >
-            {!mediaId ? "Create Media" : "Edit media"}
-          </Button>
-          <Button onClick={this.hideModalUrl} className={classes.button}>
-            Cancel
-          </Button>
-        </div>
-      </form>
-    );
+  const { handleSubmit, classes, match, initialValues } = props;
+  let fileType = null;
+  let mediaViewer = null;
+  if (initialValues) {
+    const { file } = initialValues;
+    const { fileName, originalName } = file;
+    const fileUrl = `http://localhost:8080/download?file=${fileName}`;
+    fileType = getFileTypeFromFileName(originalName);
+    mediaViewer = returnMediaViewer(fileType, fileUrl);
   }
+  const mediaId = match.params.id;
+  const uploadButton = !mediaId ? (
+    <Field name="file" component={FileInput} />
+  ) : null;
+
+  return (
+    <form
+      className={classes.container}
+      onSubmit={handleSubmit(!initialValues ? onSubmit : onEdit)}
+    >
+      <Field
+        name="title"
+        label="Media Name"
+        helperText="Media name"
+        placeholder="Video 1"
+        stylingClass={classes.textField}
+        component={renderTextField}
+        type="text"
+      />
+
+      {uploadButton}
+
+      {mediaViewer}
+
+      <div className={classes.buttonContainer}>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          className={classes.button}
+        >
+          {!mediaId ? "Create Media" : "Edit media"}
+        </Button>
+        <Button onClick={hideModalUrl} className={classes.button}>
+          Cancel
+        </Button>
+      </div>
+    </form>
+  );
 }
 
 MediaForm = reduxForm({
