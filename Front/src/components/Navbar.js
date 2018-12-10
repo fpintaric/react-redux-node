@@ -27,11 +27,11 @@ function MenuAppBar(props) {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenu = event => {
-    setAnchorEl({ anchorEl: event.currentTarget });
+    setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
-    setAnchorEl({ anchorEl: null });
+    setAnchorEl(null);
   };
 
   const addNewLocation = currentPath => {
