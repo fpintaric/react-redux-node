@@ -6,7 +6,7 @@ function jwt() {
   logger.log("info", "JWT");
   const secret = process.env.API_SECRET_KEY;
   return expressJwt({ secret, isRevoked }).unless({
-    path: ["/users/authenticate", "/users/register/", "/download"]
+    path: ["/users/authenticate", "/users/register", "/download"]
   });
   //TODO: write a better solution for authenticating requests to download
 }

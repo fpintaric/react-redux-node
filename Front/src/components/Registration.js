@@ -72,7 +72,7 @@ const validate = values => {
 
 function Registration(props) {
   const onSubmit = values => {
-    props.authenticationRequest(values);
+    props.registrationRequest(values);
   };
 
   const { classes, handleSubmit } = props;
