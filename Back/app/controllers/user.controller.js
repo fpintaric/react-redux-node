@@ -1,4 +1,5 @@
 const userService = require("../services/user.service.js");
+const sendRegistrationMail = require("../services/mail.service.js");
 const logger = require("../../config/logger.config");
 
 exports.authenticate = (req, res, next) => {
@@ -16,7 +17,10 @@ exports.register = (req, res, next) => {
   logger.log("info", "UserController.register()");
   userService
     .create(req.body)
-    .then(() => res.json({}))
+    .then(() => {
+      sendRegistrationMail(req.body.username, req.body.email);
+      res.json({});
+    })
     .catch(err => next(err));
 };
 
